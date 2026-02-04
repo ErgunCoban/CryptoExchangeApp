@@ -12,6 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoExchangeAppTheme
+import com.erguncoban.cryptoexchangeapp.uix.LoginScreen
+import com.erguncoban.cryptoexchangeapp.uix.SignupScreen
+import com.erguncoban.cryptoexchangeapp.uix.WelcomeScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +22,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CryptoExchangeAppTheme {
-
+                LoginScreen()
             }
         }
     }
