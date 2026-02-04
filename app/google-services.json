@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "727861608057",
+    "project_id": "cryptoexchangeapperguncoban",
+    "storage_bucket": "cryptoexchangeapperguncoban.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:727861608057:android:4fc7efd3834deb7d0e5ea8",
+        "android_client_info": {
+          "package_name": "com.erguncoban.cryptoexchangeapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAf1imOp9T0Lq13RYGZO1H2iT70nUKiCfY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
