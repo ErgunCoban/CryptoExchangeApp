@@ -196,11 +196,17 @@ fun SignupScreen(navController: NavController, authViewModel: AuthViewModel){
 
                 Button(
                     onClick = {
-                        if (tfPassword.value == tfConfirmPassword.value){
+                        if (tfPassword.value == tfConfirmPassword.value && checkedState.value == true){
                             authViewModel.signUp(tfEmail.value, tfPassword.value)
                         }else{
-                            scope.launch {
-                                snackbarHostState.showSnackbar("Passwords don't match")
+                            if (checkedState.value == false){
+                                scope.launch {
+                                    snackbarHostState.showSnackbar("Please accept the terms & conditions")
+                                }
+                            }else{
+                                scope.launch {
+                                    snackbarHostState.showSnackbar("Passwords don't match")
+                                }
                             }
                         }
                     },

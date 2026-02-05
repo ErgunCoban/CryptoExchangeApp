@@ -5,12 +5,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.navigation.NavController
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoExchangeAppTheme
-import com.erguncoban.cryptoexchangeapp.uix.view.LoginScreen
-import com.erguncoban.cryptoexchangeapp.uix.view.ScreenTransitions
+import com.erguncoban.cryptoexchangeapp.uix.navigation.BottomBar
+import com.erguncoban.cryptoexchangeapp.uix.view.HomeScreen
 import com.erguncoban.cryptoexchangeapp.uix.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.HiltAndroidApp
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CryptoExchangeAppTheme {
-                ScreenTransitions(authViewModel)
+                BottomBar("welcomeScreen")
             }
         }
     }

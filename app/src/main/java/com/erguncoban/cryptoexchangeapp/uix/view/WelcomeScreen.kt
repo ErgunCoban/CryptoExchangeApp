@@ -55,7 +55,7 @@ fun WelcomeScreen(navController: NavController){
                 Image(
                     painter = painterResource(R.drawable.bit_bridge_logo),
                     contentDescription = "app logo",
-                    modifier = Modifier.size(160.dp)
+                    modifier = Modifier.size(150.dp)
                 )
                 Spacer(modifier = Modifier.height(24.dp))
 
