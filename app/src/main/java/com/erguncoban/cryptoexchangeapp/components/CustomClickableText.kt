@@ -1,6 +1,5 @@
-package com.erguncoban.cryptoexchangeapp.functions
+package com.erguncoban.cryptoexchangeapp.components
 
-import android.R
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color

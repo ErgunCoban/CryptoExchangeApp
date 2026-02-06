@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -18,7 +17,6 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -37,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.erguncoban.cryptoexchangeapp.R
-import com.erguncoban.cryptoexchangeapp.functions.CustomClickableText
+import com.erguncoban.cryptoexchangeapp.components.CustomClickableText
 import com.erguncoban.cryptoexchangeapp.ui.theme.DarkBackground
 import com.erguncoban.cryptoexchangeapp.ui.theme.TextDark
 import com.erguncoban.cryptoexchangeapp.ui.theme.TextGray
@@ -45,7 +43,6 @@ import com.erguncoban.cryptoexchangeapp.ui.theme.TextWhite
 import com.erguncoban.cryptoexchangeapp.ui.theme.YellowTheme
 import com.erguncoban.cryptoexchangeapp.uix.viewmodel.AuthViewModel
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 @Composable
 fun SignupScreen(navController: NavController, authViewModel: AuthViewModel){

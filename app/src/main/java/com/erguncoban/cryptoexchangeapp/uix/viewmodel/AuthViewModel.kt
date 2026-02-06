@@ -3,13 +3,17 @@ package com.erguncoban.cryptoexchangeapp.uix.viewmodel
 import androidx.compose.runtime.mutableStateOf
 import com.erguncoban.cryptoexchangeapp.data.repository.FirebaseAuthRepository
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.erguncoban.cryptoexchangeapp.data.datastore.PreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(private val authRepository: FirebaseAuthRepository) : ViewModel() {
+class AuthViewModel @Inject constructor(private val authRepository: FirebaseAuthRepository,
+                                        private val preferencesManager: PreferencesManager) : ViewModel() {
 
     var isLoading = mutableStateOf(false)
         private set
@@ -20,19 +24,30 @@ class AuthViewModel @Inject constructor(private val authRepository: FirebaseAuth
     var isSuccess = mutableStateOf(false)
         private set
 
-    fun login(email: String, password: String){
+    init {
+        viewModelScope.launch {
+            val firebaseLoggedIn = authRepository.isUserLoggedIn()
+            val rememberMePreference = preferencesManager.isRememberMeChecked.first()
+
+            isSuccess.value = firebaseLoggedIn && rememberMePreference
+        }
+    }
+
+    val isRememberMe = preferencesManager.isRememberMeChecked.asLiveData()
+
+    fun login(email: String, password: String, rememberMe: Boolean){
         viewModelScope.launch {
             isLoading.value = true
-            errorMessage.value = ""
+            errorMessage.value = null
 
             val result = authRepository.login(email, password)
 
             if (result){
+                preferencesManager.setRememberMe(rememberMe)
                 isSuccess.value = true
             }else{
                 errorMessage.value = "Login failed"
             }
-
             isLoading.value = false
 
         }
@@ -63,6 +78,12 @@ class AuthViewModel @Inject constructor(private val authRepository: FirebaseAuth
     fun logout(){
         authRepository.logout()
         isSuccess.value = false
+    }
+
+    fun updateRememberMeSelection(value: Boolean){
+        viewModelScope.launch {
+            preferencesManager.setRememberMe(value)
+        }
     }
 
 }

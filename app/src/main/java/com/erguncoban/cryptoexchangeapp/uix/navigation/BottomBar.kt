@@ -1,14 +1,17 @@
 package com.erguncoban.cryptoexchangeapp.uix.navigation
 
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -28,6 +31,7 @@ import com.erguncoban.cryptoexchangeapp.uix.view.HomeScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.MarketsScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.SignupScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.TradeScreen
+import com.erguncoban.cryptoexchangeapp.uix.view.UserProfileScreen
 
 @Composable
 fun BottomBar(startDestination: String){
@@ -35,14 +39,16 @@ fun BottomBar(startDestination: String){
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val viewModel: AuthViewModel = hiltViewModel()
+    val authViewModel: AuthViewModel = hiltViewModel()
+
+    val isRememberMe by authViewModel.isRememberMe.observeAsState(initial = false)
 
     val bottomBarScreens = listOf("homeScreen", "marketsScreen", "tradeScreen", "assetsScreen")
 
     Scaffold(
         bottomBar = {
             if (currentRoute in bottomBarScreens){
-                BottomAppBar {
+                NavigationBar {
                     NavigationBarItem(
                         selected = currentRoute == "homeScreen",
                         onClick = {navController.navigate("homeScreen")},
@@ -125,11 +131,11 @@ fun BottomBar(startDestination: String){
             }
 
             composable("loginScreen"){
-                LoginScreen(navController = navController, viewModel)
+                LoginScreen(navController = navController, authViewModel)
             }
 
             composable("signupScreen"){
-                SignupScreen(navController = navController, viewModel)
+                SignupScreen(navController = navController, authViewModel)
             }
 
             composable("homeScreen"){
@@ -146,6 +152,10 @@ fun BottomBar(startDestination: String){
 
             composable("assetsScreen"){
                 AssetsScreen(navController = navController)
+            }
+
+            composable("userProfileScreen"){
+                UserProfileScreen(navController = navController, authViewModel)
             }
 
         }
