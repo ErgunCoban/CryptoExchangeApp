@@ -1,8 +1,9 @@
 package com.erguncoban.cryptoexchangeapp.data.repository
 
 import com.erguncoban.cryptoexchangeapp.data.datasource.FirebaseAuthDataSource
+import javax.inject.Inject
 
-class FirebaseAuthRepository(private val authDataSource: FirebaseAuthDataSource) {
+class FirebaseAuthRepository @Inject constructor(private val authDataSource: FirebaseAuthDataSource) {
 
     suspend fun login(email: String, password: String) : Boolean{
         return authDataSource.login(email, password)

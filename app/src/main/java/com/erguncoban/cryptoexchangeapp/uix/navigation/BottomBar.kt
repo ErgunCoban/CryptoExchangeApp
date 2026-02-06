@@ -1,9 +1,7 @@
 package com.erguncoban.cryptoexchangeapp.uix.navigation
 
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -16,22 +14,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.erguncoban.cryptoexchangeapp.R
 import com.erguncoban.cryptoexchangeapp.ui.theme.TextGray
-import com.erguncoban.cryptoexchangeapp.uix.view.LoginScreen
-import com.erguncoban.cryptoexchangeapp.uix.view.WelcomeScreen
-import com.erguncoban.cryptoexchangeapp.uix.viewmodel.AuthViewModel
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.erguncoban.cryptoexchangeapp.uix.view.AssetsScreen
+import com.erguncoban.cryptoexchangeapp.uix.view.CoinDetailsScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.HomeScreen
+import com.erguncoban.cryptoexchangeapp.uix.view.LoginScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.MarketsScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.SignupScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.TradeScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.UserProfileScreen
+import com.erguncoban.cryptoexchangeapp.uix.view.WelcomeScreen
+import com.erguncoban.cryptoexchangeapp.uix.viewmodel.AuthViewModel
+import com.erguncoban.cryptoexchangeapp.uix.viewmodel.HomeViewModel
 
 @Composable
 fun BottomBar(startDestination: String){
@@ -40,6 +40,7 @@ fun BottomBar(startDestination: String){
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val authViewModel: AuthViewModel = hiltViewModel()
+    val homeViewModel: HomeViewModel = hiltViewModel()
 
     val isRememberMe by authViewModel.isRememberMe.observeAsState(initial = false)
 
@@ -139,7 +140,7 @@ fun BottomBar(startDestination: String){
             }
 
             composable("homeScreen"){
-                HomeScreen(navController = navController)
+                HomeScreen(navController = navController, homeViewModel)
             }
 
             composable("marketsScreen"){
@@ -156,6 +157,10 @@ fun BottomBar(startDestination: String){
 
             composable("userProfileScreen"){
                 UserProfileScreen(navController = navController, authViewModel)
+            }
+
+            composable("coinDetailsScreen"){
+                CoinDetailsScreen()
             }
 
         }
