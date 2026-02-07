@@ -1,5 +1,6 @@
 package com.erguncoban.cryptoexchangeapp.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,12 +16,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.erguncoban.cryptoexchangeapp.R
+import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoBlackBackground
 import com.erguncoban.cryptoexchangeapp.ui.theme.YellowTheme
-import com.erguncoban.cryptoexchangeapp.uix.viewmodel.AuthViewModel
 
 @Composable
 fun HomeTopBar(navController: NavController){
@@ -28,6 +27,7 @@ fun HomeTopBar(navController: NavController){
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .background(CryptoBlackBackground)
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween

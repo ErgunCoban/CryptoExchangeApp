@@ -32,6 +32,7 @@ import com.erguncoban.cryptoexchangeapp.uix.view.UserProfileScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.WelcomeScreen
 import com.erguncoban.cryptoexchangeapp.uix.viewmodel.AuthViewModel
 import com.erguncoban.cryptoexchangeapp.uix.viewmodel.HomeViewModel
+import com.erguncoban.cryptoexchangeapp.uix.viewmodel.MarketsViewModel
 
 @Composable
 fun BottomBar(startDestination: String){
@@ -39,8 +40,10 @@ fun BottomBar(startDestination: String){
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+
     val authViewModel: AuthViewModel = hiltViewModel()
     val homeViewModel: HomeViewModel = hiltViewModel()
+    val marketsViewModel: MarketsViewModel = hiltViewModel()
 
     val isRememberMe by authViewModel.isRememberMe.observeAsState(initial = false)
 
@@ -144,7 +147,7 @@ fun BottomBar(startDestination: String){
             }
 
             composable("marketsScreen"){
-                MarketsScreen(navController = navController)
+                MarketsScreen(navController = navController, marketsViewModel)
             }
 
             composable("tradeScreen"){
