@@ -181,7 +181,7 @@ fun MarketsScreen(navController: NavController, marketsViewModel: MarketsViewMod
                     CoinListItem(
                         coin,
                         onClick = { coinId ->
-                            navController.navigate("coinDetailsScreen")
+                            navController.navigate("coinDetailsScreen/$coinId")
                         }
                     )
 

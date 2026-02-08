@@ -9,16 +9,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.erguncoban.cryptoexchangeapp.R
 import com.erguncoban.cryptoexchangeapp.ui.theme.TextGray
 import com.erguncoban.cryptoexchangeapp.uix.view.AssetsScreen
@@ -30,9 +31,6 @@ import com.erguncoban.cryptoexchangeapp.uix.view.SignupScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.TradeScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.UserProfileScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.WelcomeScreen
-import com.erguncoban.cryptoexchangeapp.uix.viewmodel.AuthViewModel
-import com.erguncoban.cryptoexchangeapp.uix.viewmodel.HomeViewModel
-import com.erguncoban.cryptoexchangeapp.uix.viewmodel.MarketsViewModel
 
 @Composable
 fun BottomBar(startDestination: String){
@@ -40,12 +38,6 @@ fun BottomBar(startDestination: String){
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-
-    val authViewModel: AuthViewModel = hiltViewModel()
-    val homeViewModel: HomeViewModel = hiltViewModel()
-    val marketsViewModel: MarketsViewModel = hiltViewModel()
-
-    val isRememberMe by authViewModel.isRememberMe.observeAsState(initial = false)
 
     val bottomBarScreens = listOf("homeScreen", "marketsScreen", "tradeScreen", "assetsScreen")
 
@@ -135,19 +127,19 @@ fun BottomBar(startDestination: String){
             }
 
             composable("loginScreen"){
-                LoginScreen(navController = navController, authViewModel)
+                LoginScreen(navController = navController, authViewModel = hiltViewModel())
             }
 
             composable("signupScreen"){
-                SignupScreen(navController = navController, authViewModel)
+                SignupScreen(navController = navController, authViewModel = hiltViewModel())
             }
 
             composable("homeScreen"){
-                HomeScreen(navController = navController, homeViewModel)
+                HomeScreen(navController = navController, homeViewModel = hiltViewModel())
             }
 
             composable("marketsScreen"){
-                MarketsScreen(navController = navController, marketsViewModel)
+                MarketsScreen(navController = navController, marketsViewModel = hiltViewModel())
             }
 
             composable("tradeScreen"){
@@ -159,11 +151,16 @@ fun BottomBar(startDestination: String){
             }
 
             composable("userProfileScreen"){
-                UserProfileScreen(navController = navController, authViewModel)
+                UserProfileScreen(navController = navController, authViewModel = hiltViewModel())
             }
 
-            composable("coinDetailsScreen"){
-                CoinDetailsScreen()
+            composable("coinDetailsScreen/{coinId}",
+                arguments = listOf(
+                    navArgument("coinId"){ type = NavType.StringType}
+                )
+                ){ backStackEntry ->
+                val coinId = backStackEntry.arguments?.getString("coinId") ?: ""
+                CoinDetailsScreen(navController = navController, coinId = coinId)
             }
 
         }

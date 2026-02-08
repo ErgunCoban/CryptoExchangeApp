@@ -66,7 +66,7 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel){
                 CoinListItem(
                     coin = coin,
                     onClick = { coinId ->
-                        navController.navigate("coinDetailsScreen")
+                        navController.navigate("coinDetailsScreen/$coinId")
                     }
 
                 )

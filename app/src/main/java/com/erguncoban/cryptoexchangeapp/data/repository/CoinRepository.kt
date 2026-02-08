@@ -10,4 +10,8 @@ class CoinRepository @Inject constructor(private val dataSource: CoinDataSource)
         return dataSource.getCoins()
     }
 
+    suspend fun getCoinById(id: String) : CryptoCoin? {
+        return dataSource.getCoinById(id)
+    }
+
 }
