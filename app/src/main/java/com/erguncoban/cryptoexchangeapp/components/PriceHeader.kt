@@ -52,7 +52,7 @@ fun PriceHeader(coin: CryptoCoin?){
 
                 Row {
                     Text(
-                        text = "${FormatPrice(price)}",
+                        text = "$${FormatPrice(price)}",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         color = CryptoWhite,

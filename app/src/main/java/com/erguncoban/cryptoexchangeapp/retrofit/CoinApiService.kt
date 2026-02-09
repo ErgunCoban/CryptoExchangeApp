@@ -1,8 +1,10 @@
 package com.erguncoban.cryptoexchangeapp.retrofit
 
 import com.erguncoban.cryptoexchangeapp.data.entity.CryptoCoin
+import com.erguncoban.cryptoexchangeapp.data.entity.MarketChartResponse
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CoinApiService {
@@ -22,5 +24,13 @@ interface CoinApiService {
         @Query("vs_currency") currency: String = "usd",
         @Query("ids") id: String,
     ) : List<CryptoCoin>
+
+    @GET("coins/{id}/market_chart")
+    suspend fun getCoinMarketChart(
+        @Header("x-cg-demo-api-key") apiKey: String,
+        @Path("id") coinId: String,
+        @Query("vs_currency") currency: String = "usd",
+        @Query("days") days: String = "7"
+    ) : MarketChartResponse
 
 }

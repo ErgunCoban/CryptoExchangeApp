@@ -1,6 +1,7 @@
 package com.erguncoban.cryptoexchangeapp.data.datasource
 
 import com.erguncoban.cryptoexchangeapp.data.entity.CryptoCoin
+import com.erguncoban.cryptoexchangeapp.data.entity.MarketChartResponse
 import com.erguncoban.cryptoexchangeapp.retrofit.CoinApiService
 import javax.inject.Inject
 
@@ -14,6 +15,10 @@ class CoinDataSource @Inject constructor(private val api: CoinApiService) {
 
     suspend fun getCoinById(id: String) : CryptoCoin? {
         return api.getCoinById(API_KEY, id = id).firstOrNull()
+    }
+
+    suspend fun getCoinMarketChart(id: String) : MarketChartResponse {
+        return api.getCoinMarketChart(API_KEY, id)
     }
 
 }
