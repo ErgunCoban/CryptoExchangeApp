@@ -15,17 +15,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.erguncoban.cryptoexchangeapp.data.entity.CryptoCoin
+import com.erguncoban.cryptoexchangeapp.data.entity.CryptoDetailResponse
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoGray
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoWhite
 import com.erguncoban.cryptoexchangeapp.ui.theme.MarketGreen
 import com.erguncoban.cryptoexchangeapp.ui.theme.MarketRed
 
 @Composable
-fun PriceHeader(coin: CryptoCoin?){
+fun PriceHeader(coin: CryptoDetailResponse?){
 
-    val price = coin?.current_price
-    val volume = coin?.total_volume
+    val price = coin?.marketData?.getCurrentPriceUsd()
+    val volume = coin?.marketData?.getTotalVolumeUsd()
 
     val volumeInCoin = if (price != null && volume != null && price != 0.0) {
         volume / price
@@ -59,12 +59,12 @@ fun PriceHeader(coin: CryptoCoin?){
                     )
                     Spacer(modifier = Modifier.size(6.dp))
 
-                    val isPositive = (coin?.priceChangedPercentage24h ?: 0.0) >= 0
+                    val isPositive = (coin?.marketData?.priceChangedPercentage24h ?: 0.0) >= 0
                     val changeColor = if (isPositive) MarketGreen else MarketRed
                     val changePrefix = if (isPositive) "+" else ""
 
                     Text(
-                        text = "$changePrefix${FormatPrice(coin?.priceChangedPercentage24h)}%",
+                        text = "$changePrefix${FormatPrice(coin?.marketData?.priceChangedPercentage24h)}%",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         color = changeColor
@@ -106,7 +106,7 @@ fun PriceHeader(coin: CryptoCoin?){
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = FormatPrice(coin?.high24h),
+                        text = FormatPrice(coin?.marketData?.getHigh24h()),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
                         color = CryptoWhite,
@@ -151,7 +151,7 @@ fun PriceHeader(coin: CryptoCoin?){
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = FormatPrice(coin?.low24h),
+                        text = FormatPrice(coin?.marketData?.getLow24h()),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
                         color = CryptoWhite,

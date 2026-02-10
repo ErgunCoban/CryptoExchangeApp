@@ -28,15 +28,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.erguncoban.cryptoexchangeapp.R
-import com.erguncoban.cryptoexchangeapp.data.entity.CryptoCoin
+import com.erguncoban.cryptoexchangeapp.data.entity.CryptoDetailResponse
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoWhite
 import com.erguncoban.cryptoexchangeapp.ui.theme.YellowTheme
 
 @Composable
-fun CoinDetailsTopBar(navController: NavController, coin: CryptoCoin?){
+fun CoinDetailsTopBar(navController: NavController,
+                      coin: CryptoDetailResponse?,
+                      selectedTabIndex: Int,
+                      onTabSelected: (Int) -> Unit){
 
     var isFavorite by remember { mutableStateOf(false) }
-    var selectedTabIndex by remember { mutableStateOf(0) }
     val tabs = listOf("Price", "Info")
 
     Column {
@@ -127,20 +129,16 @@ fun CoinDetailsTopBar(navController: NavController, coin: CryptoCoin?){
             tabs.forEachIndexed { index, title ->
                 Tab(
                     selected = selectedTabIndex == index,
-                    onClick = { selectedTabIndex = index },
+                    onClick = { onTabSelected(index) },
                     text = {
                         Text(
                             text = title,
-                            fontWeight = if (selectedTabIndex == index){
-                                FontWeight.Bold
-                            }else{
-                                FontWeight.Normal
-                            }
+                            fontWeight = if (selectedTabIndex == index) FontWeight.Bold else FontWeight.Normal,
+                            color = if (selectedTabIndex == index) CryptoWhite else Color.Gray
                         )
                     }
                 )
             }
         }
     }
-
 }

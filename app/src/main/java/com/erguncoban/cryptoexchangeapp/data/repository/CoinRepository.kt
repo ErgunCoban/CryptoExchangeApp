@@ -2,6 +2,7 @@ package com.erguncoban.cryptoexchangeapp.data.repository
 
 import com.erguncoban.cryptoexchangeapp.data.datasource.CoinDataSource
 import com.erguncoban.cryptoexchangeapp.data.entity.CryptoCoin
+import com.erguncoban.cryptoexchangeapp.data.entity.CryptoDetailResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -32,6 +33,10 @@ class CoinRepository @Inject constructor(private val dataSource: CoinDataSource)
             e.printStackTrace()
             emit(emptyList())
         }
+    }
+
+    suspend fun getCoinDetails(id: String) : CryptoDetailResponse {
+        return dataSource.getCoinDetails(id)
     }
 
 }

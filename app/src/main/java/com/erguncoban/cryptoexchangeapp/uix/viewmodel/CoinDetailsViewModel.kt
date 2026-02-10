@@ -1,9 +1,8 @@
 package com.erguncoban.cryptoexchangeapp.uix.viewmodel
 
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.erguncoban.cryptoexchangeapp.data.entity.CryptoCoin
+import com.erguncoban.cryptoexchangeapp.data.entity.CryptoDetailResponse
 import com.erguncoban.cryptoexchangeapp.data.repository.CoinRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,34 +15,34 @@ import javax.inject.Inject
 @HiltViewModel
 class CoinDetailsViewModel @Inject constructor(private val repository: CoinRepository) : ViewModel() {
 
-    private val _coin = MutableStateFlow<CryptoCoin?>(null)
-    val coin = _coin.asStateFlow()
+    private val _coinDetail = MutableStateFlow<CryptoDetailResponse?>(null)
+    val coinDetail = _coinDetail.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
-
     private val _chartData = MutableStateFlow<List<Pair<Long, Float>>>(emptyList())
     val chartData: StateFlow<List<Pair<Long, Float>>> = _chartData
 
-    fun loadCoin(id: String){
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage = _errorMessage.asStateFlow()
+
+    fun loadCoinDetails(id: String){
         viewModelScope.launch {
             _isLoading.value = true
+            _errorMessage.value = null
 
-            _coin.value = repository.getCoinById(id)
-
-            _isLoading.value = false
+            try {
+                val detailResponse = repository.getCoinDetails(id)
+                _coinDetail.value = detailResponse
+            } catch (e: Exception){
+                _errorMessage.value = "Data couldn't be received: ${e.localizedMessage}"
+                e.printStackTrace()
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
-
-    val chartColor: Color
-        get() {
-            val data = _chartData.value
-            if (data.isEmpty()) return Color.Gray
-            val firstPrice = data.first().second
-            val lastPrice = data.last().second
-            return if (lastPrice >= firstPrice) Color.Green else Color.Red
-        }
 
     fun loadChart(coinId: String) {
         viewModelScope.launch {
