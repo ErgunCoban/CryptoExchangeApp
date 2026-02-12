@@ -17,7 +17,7 @@ fun QuickActionSection(){
     ){
 
         QuickActionButton(R.drawable.deposit_icon, "Deposit")
-        QuickActionButton(R.drawable.withdraw_icon3, "Withdraw")
+        QuickActionButton(R.drawable.withdraw_icon, "Withdraw")
         QuickActionButton(R.drawable.transfer_icon, "Transfer")
         QuickActionButton(R.drawable.bitcoin_icon, "Buy Crypto", true)
 

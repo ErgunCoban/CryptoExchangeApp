@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -19,20 +18,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.erguncoban.cryptoexchangeapp.R
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoDarkCard
+import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoGray
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoWhite
-import com.erguncoban.cryptoexchangeapp.ui.theme.MarketGreen
 import com.erguncoban.cryptoexchangeapp.ui.theme.TextGray
 import com.erguncoban.cryptoexchangeapp.ui.theme.YellowTheme
 
 @Composable
-fun PortfolioCard(){
+fun PortfolioAssetCard(){
 
     val isVisible = remember { mutableStateOf(true) }
 
@@ -95,24 +93,15 @@ fun PortfolioCard(){
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.up_arrow_green),
-                    contentDescription = "profit day",
-                    tint = Color.Unspecified,   //iconun kendi renginde görünmesi için
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = "+$250.10 (2.15%) ",
-                    color = MarketGreen,
-                    fontWeight = FontWeight.Medium
-                )
 
                 Text(
-                    text = "Today",
-                    color = TextGray,
-                    fontWeight = FontWeight.Medium
+                    text = "≈ 0.25 BTC",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = CryptoGray
                 )
+
+
 
             }
 
