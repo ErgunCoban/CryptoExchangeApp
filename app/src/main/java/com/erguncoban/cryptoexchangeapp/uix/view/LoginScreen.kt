@@ -26,7 +26,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -39,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.erguncoban.cryptoexchangeapp.R
 import com.erguncoban.cryptoexchangeapp.components.CustomClickableText
@@ -49,10 +49,9 @@ import com.erguncoban.cryptoexchangeapp.ui.theme.TextWhite
 import com.erguncoban.cryptoexchangeapp.ui.theme.YellowTheme
 import com.erguncoban.cryptoexchangeapp.uix.viewmodel.AuthViewModel
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 @Composable
-fun LoginScreen(navController: NavController, authViewModel: AuthViewModel){
+fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = hiltViewModel()){
 
     val isRememberMeChecked by authViewModel.isRememberMe.observeAsState(initial = false)
 

@@ -65,7 +65,7 @@ fun CoinDetailsScreen(navController: NavController,
                         .background(MaterialTheme.colorScheme.background)
                         .padding(16.dp)
                 ) {
-                    CoinTransactionBar(detail, viewModel)
+                    CoinTransactionBar(detail, navController)
                 }
             }
         }

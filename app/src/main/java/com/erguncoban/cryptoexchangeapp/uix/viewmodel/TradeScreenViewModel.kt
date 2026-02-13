@@ -12,16 +12,16 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val repository: CoinRepository) : ViewModel() {
+class TradeScreenViewModel @Inject constructor(private val repository: CoinRepository): ViewModel() {
 
     private val _coinList = MutableStateFlow<List<CryptoCoin>>(emptyList())
     val coinList = _coinList.asStateFlow()
 
     init {
-        loadCoins()
+        loadCoin()
     }
 
-    private fun loadCoins(){
+    fun loadCoin(){
         viewModelScope.launch {
             try {
                 val result = repository.getCoins()

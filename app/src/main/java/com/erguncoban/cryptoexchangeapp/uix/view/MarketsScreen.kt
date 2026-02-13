@@ -41,6 +41,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.erguncoban.cryptoexchangeapp.R
 import com.erguncoban.cryptoexchangeapp.components.CoinListItem
@@ -52,7 +53,7 @@ import com.erguncoban.cryptoexchangeapp.uix.viewmodel.MarketsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MarketsScreen(navController: NavController, marketsViewModel: MarketsViewModel){
+fun MarketsScreen(navController: NavController, marketsViewModel: MarketsViewModel = hiltViewModel()){
 
     val isSearching = remember { mutableStateOf(false) }
     val tfSearchView = remember { mutableStateOf("") }

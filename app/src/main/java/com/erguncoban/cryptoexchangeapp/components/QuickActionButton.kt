@@ -19,14 +19,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.erguncoban.cryptoexchangeapp.R
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoBlackBackground
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoDarkCard
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoGray
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoYellow
 
 @Composable
-fun QuickActionButton(icon: Int, label: String, highlight: Boolean = false){
+fun QuickActionButton(icon: Int, label: String, highlight: Boolean = false, onClick: () -> Unit){
 
     Column(
         modifier = Modifier
@@ -45,7 +44,7 @@ fun QuickActionButton(icon: Int, label: String, highlight: Boolean = false){
                     }
                 )
                 .clickable {
-                    //action
+                    onClick()
                 },
             contentAlignment = Alignment.Center
         ) {

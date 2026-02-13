@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.erguncoban.cryptoexchangeapp.components.CoinListItem
 import com.erguncoban.cryptoexchangeapp.components.HomeTopBar
@@ -26,7 +27,7 @@ import com.erguncoban.cryptoexchangeapp.uix.viewmodel.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel){
+fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel = hiltViewModel()){
 
     val coinList by homeViewModel.coinList.collectAsState(initial = emptyList())
 
@@ -51,7 +52,7 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel){
 
             item { PortfolioCard() }
 
-            item { QuickActionSection() }
+            item { QuickActionSection(navController) }
 
             item {
                 Text(

@@ -57,17 +57,26 @@ fun AssetsScreen(navController: NavController){
                 ) {
                     QuickActionButton(
                         icon = R.drawable.deposit_icon,
-                        label = "Deposit"
+                        label = "Deposit",
+                        onClick = {
+                            navController.navigate("depositScreen")
+                        }
                     )
 
                     QuickActionButton(
                         icon = R.drawable.withdraw_icon,
-                        label = "Withdraw"
+                        label = "Withdraw",
+                        onClick = {
+                            navController.navigate("withdrawScreen")
+                        }
                     )
 
                     QuickActionButton(
                         icon = R.drawable.transfer_icon,
-                        label = "Transfer"
+                        label = "Transfer",
+                        onClick = {
+                            navController.navigate("transferScreen")
+                        }
                     )
                 }
                 Spacer(modifier = Modifier.size(16.dp))

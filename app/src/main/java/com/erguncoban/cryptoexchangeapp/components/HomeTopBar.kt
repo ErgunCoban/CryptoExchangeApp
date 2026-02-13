@@ -54,7 +54,7 @@ fun HomeTopBar(navController: NavController){
 
         IconButton(
             onClick = {
-                //bildirimler ekranına geçiş sağlanacak
+                navController.navigate("notificationsScreen")
             }
         ) {
             Icon(

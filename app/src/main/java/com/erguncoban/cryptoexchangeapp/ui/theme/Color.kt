@@ -24,4 +24,6 @@ val CryptoGray = Color(0xFFAAAAAA)
 val MarketGreen = Color(0xFF00C853)
 val MarketRed = Color(0xFFD32F2F)
 
+val CryptoFieldGray = Color(0xFF2A2A2A)
+val CryptoDarkGray = Color(0xFF1E1E1E)
 val TextFieldContainerColor = Color(0xFF212121)

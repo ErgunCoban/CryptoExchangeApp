@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.erguncoban.cryptoexchangeapp.R
 import com.erguncoban.cryptoexchangeapp.components.CustomClickableText
@@ -45,7 +46,7 @@ import com.erguncoban.cryptoexchangeapp.uix.viewmodel.AuthViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun SignupScreen(navController: NavController, authViewModel: AuthViewModel){
+fun SignupScreen(navController: NavController, authViewModel: AuthViewModel = hiltViewModel()){
 
     val tfEmail = remember { mutableStateOf("") }
     val tfPassword = remember { mutableStateOf("") }

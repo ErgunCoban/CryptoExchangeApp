@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -24,13 +23,17 @@ import com.erguncoban.cryptoexchangeapp.R
 import com.erguncoban.cryptoexchangeapp.ui.theme.TextGray
 import com.erguncoban.cryptoexchangeapp.uix.view.AssetsScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.CoinDetailsScreen
+import com.erguncoban.cryptoexchangeapp.uix.view.DepositScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.HomeScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.LoginScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.MarketsScreen
+import com.erguncoban.cryptoexchangeapp.uix.view.NotificationsScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.SignupScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.TradeScreen
+import com.erguncoban.cryptoexchangeapp.uix.view.TransferScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.UserProfileScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.WelcomeScreen
+import com.erguncoban.cryptoexchangeapp.uix.view.WithdrawScreen
 
 @Composable
 fun BottomBar(startDestination: String){
@@ -127,23 +130,25 @@ fun BottomBar(startDestination: String){
             }
 
             composable("loginScreen"){
-                LoginScreen(navController = navController, authViewModel = hiltViewModel())
+                LoginScreen(navController = navController)
             }
 
             composable("signupScreen"){
-                SignupScreen(navController = navController, authViewModel = hiltViewModel())
+                SignupScreen(navController = navController)
             }
 
             composable("homeScreen"){
-                HomeScreen(navController = navController, homeViewModel = hiltViewModel())
+                HomeScreen(navController = navController)
             }
 
             composable("marketsScreen"){
-                MarketsScreen(navController = navController, marketsViewModel = hiltViewModel())
+                MarketsScreen(navController = navController)
             }
 
             composable("tradeScreen"){
-                TradeScreen(navController = navController)
+                TradeScreen(navController = navController){isBuy, price, amount ->
+                    println("Is Buy: $isBuy - Price: $price - Amount: $amount")
+                }
             }
 
             composable("assetsScreen"){
@@ -151,7 +156,7 @@ fun BottomBar(startDestination: String){
             }
 
             composable("userProfileScreen"){
-                UserProfileScreen(navController = navController, authViewModel = hiltViewModel())
+                UserProfileScreen(navController = navController)
             }
 
             composable("coinDetailsScreen/{coinId}",
@@ -161,6 +166,28 @@ fun BottomBar(startDestination: String){
                 ){ backStackEntry ->
                 val coinId = backStackEntry.arguments?.getString("coinId") ?: ""
                 CoinDetailsScreen(navController = navController, coinId = coinId)
+            }
+
+            composable("depositScreen"){
+                DepositScreen(navController = navController){amount ->
+                    println("Amount Deposited: $amount")
+                }
+            }
+
+            composable("withdrawScreen"){
+                WithdrawScreen(navController = navController){amount ->
+                    println("Withdrawn Amount: $amount")
+                }
+            }
+
+            composable("transferScreen"){
+                TransferScreen(navController = navController){recipientAddress, assetType, amount ->
+                    println("Recipient Address: $recipientAddress - Asset Type: $assetType - Transferred Amount: $amount")
+                }
+            }
+
+            composable("notificationsScreen"){
+                NotificationsScreen(navController = navController)
             }
 
         }

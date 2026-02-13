@@ -5,10 +5,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import com.erguncoban.cryptoexchangeapp.R
 
 @Composable
-fun QuickActionSection(){
+fun QuickActionSection(navController: NavController){
 
     Row(
         modifier = Modifier
@@ -16,10 +17,18 @@ fun QuickActionSection(){
         horizontalArrangement = Arrangement.SpaceBetween
     ){
 
-        QuickActionButton(R.drawable.deposit_icon, "Deposit")
-        QuickActionButton(R.drawable.withdraw_icon, "Withdraw")
-        QuickActionButton(R.drawable.transfer_icon, "Transfer")
-        QuickActionButton(R.drawable.bitcoin_icon, "Buy Crypto", true)
+        QuickActionButton(R.drawable.deposit_icon, "Deposit", onClick = {
+            navController.navigate("depositScreen")
+        })
+        QuickActionButton(R.drawable.withdraw_icon, "Withdraw", onClick = {
+            navController.navigate("withdrawScreen")
+        })
+        QuickActionButton(R.drawable.transfer_icon, "Transfer", onClick = {
+            navController.navigate("transferScreen")
+        })
+        QuickActionButton(R.drawable.bitcoin_icon, "Buy Crypto", true, onClick = {
+            navController.navigate("tradeScreen")
+        })
 
     }
 
