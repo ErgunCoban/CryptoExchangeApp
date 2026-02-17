@@ -23,6 +23,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.erguncoban.cryptoexchangeapp.components.CoinSelectorDropdown
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoBlackBackground
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoDarkGray
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoGray
@@ -57,9 +59,17 @@ fun TradeScreen(
 
     val coinList by viewModel.coinList.collectAsState()
 
+    val selectedIndex = remember { mutableStateOf(0) }
+
+    val selectedCoin = if (coinList.isNotEmpty() && selectedIndex.value < coinList.size){
+        coinList[selectedIndex.value]
+    } else{
+        null
+    }
+
     var isBuySelected by remember { mutableStateOf(true) } // True: Al, False: Sat
 
-    var priceText by remember { mutableStateOf("67136.00") }
+    var priceText by remember { mutableStateOf("") }
     var amountText by remember { mutableStateOf("") }
 
     val totalText: String = try {
@@ -75,22 +85,16 @@ fun TradeScreen(
     val availableBTC = 0.2541
     val currentBalanceText = if (isBuySelected) "$$availableUSDT Available" else "$availableBTC BTC Available"
 
+    LaunchedEffect(selectedCoin) {
+        selectedCoin?.let {
+            priceText = it.current_price.toString()
+        }
+    }
+
     Scaffold(
         containerColor = CryptoBlackBackground,
         topBar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp, bottom = 8.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "BTC / USDT",
-                    color = CryptoWhite,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+            CoinSelectorDropdown(coinList, selectedIndex)
         }
     ) { innerPadding ->
 
