@@ -21,4 +21,8 @@ class FirebaseAuthRepository @Inject constructor(private val authDataSource: Fir
         authDataSource.logout()
     }
 
+    fun getCurrentUserUid() : String?{
+        return authDataSource.getCurrentUserUid()
+    }
+
 }

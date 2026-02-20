@@ -1,11 +1,12 @@
 package com.erguncoban.cryptoexchangeapp.uix.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
-import com.erguncoban.cryptoexchangeapp.data.repository.FirebaseAuthRepository
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.erguncoban.cryptoexchangeapp.data.datastore.PreferencesManager
+import com.erguncoban.cryptoexchangeapp.data.repository.FirebaseAuthRepository
+import com.erguncoban.cryptoexchangeapp.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -13,6 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(private val authRepository: FirebaseAuthRepository,
+                                        private val userRepository: UserRepository,
                                         private val preferencesManager: PreferencesManager) : ViewModel() {
 
     var isLoading = mutableStateOf(false)
@@ -58,16 +60,25 @@ class AuthViewModel @Inject constructor(private val authRepository: FirebaseAuth
             isLoading.value = true
             errorMessage.value = ""
 
-            val result = authRepository.signup(email, password)
+            val isAuthSuccessful = authRepository.signup(email, password)
 
-            if (result){
-                isSuccess.value = true
-            }else{
-                errorMessage.value = "Registiration failed"
+            if (isAuthSuccessful){
+                val uid = authRepository.getCurrentUserUid()
+
+                if (uid != null){
+                    val isFirestoreSuccessful = userRepository.createUserProfile(uid, email)
+
+                    if (isFirestoreSuccessful){
+                        isSuccess.value = true
+                    }else{
+                        errorMessage.value = "Registration was successful but the profile couldn't be created"
+                    }
+                }
             }
-
+            else{
+                errorMessage.value = "Registration failed"
+            }
             isLoading.value = false
-
         }
     }
 

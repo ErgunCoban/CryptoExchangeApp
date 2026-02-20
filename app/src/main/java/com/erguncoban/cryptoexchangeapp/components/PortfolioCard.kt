@@ -32,7 +32,7 @@ import com.erguncoban.cryptoexchangeapp.ui.theme.TextGray
 import com.erguncoban.cryptoexchangeapp.ui.theme.YellowTheme
 
 @Composable
-fun PortfolioCard(){
+fun PortfolioCard(balance: Double){
 
     val isVisible = remember { mutableStateOf(true) }
 
@@ -63,9 +63,11 @@ fun PortfolioCard(){
                 modifier = Modifier.padding(start = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
+
+                val formattedBalance = String.format("$%,.2f", balance)
                 Text(
                     text = if (isVisible.value){
-                        " $12,450.25"
+                        " $formattedBalance"
                     }else{
                         " $*******"
                     },

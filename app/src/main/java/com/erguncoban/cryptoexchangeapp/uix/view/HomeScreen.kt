@@ -30,6 +30,7 @@ import com.erguncoban.cryptoexchangeapp.uix.viewmodel.HomeViewModel
 fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel = hiltViewModel()){
 
     val coinList by homeViewModel.coinList.collectAsState(initial = emptyList())
+    val currentBalance by homeViewModel.balance.collectAsState()
 
     Scaffold(
         containerColor = CryptoBlackBackground,
@@ -50,7 +51,7 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel = hilt
             )
         ) {
 
-            item { PortfolioCard() }
+            item { PortfolioCard(currentBalance) }
 
             item { QuickActionSection(navController) }
 

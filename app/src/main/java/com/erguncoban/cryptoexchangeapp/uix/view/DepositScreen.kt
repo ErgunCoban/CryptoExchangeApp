@@ -19,15 +19,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.erguncoban.cryptoexchangeapp.components.CryptoButton
 import com.erguncoban.cryptoexchangeapp.components.CryptoTextField
 import com.erguncoban.cryptoexchangeapp.components.SimpleTopBar
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoBlackBackground
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoWhite
+import com.erguncoban.cryptoexchangeapp.uix.viewmodel.DepositViewModel
 
 @Composable
-fun DepositScreen(navController: NavController, onDepositClick: (Double) -> Unit) {
+fun DepositScreen(navController: NavController, viewModel: DepositViewModel = hiltViewModel()) {
+
     var amount by remember { mutableStateOf("") }
 
     Scaffold(
@@ -62,10 +65,7 @@ fun DepositScreen(navController: NavController, onDepositClick: (Double) -> Unit
             CryptoButton(
                 text = "Deposit Now",
                 onClick = {
-                    if (amount.isNotEmpty()) {
-                        onDepositClick(amount.toDouble())
-                        navController.popBackStack()
-                    }
+                    viewModel.deposit(amount.toDouble())
                 }
             )
         }

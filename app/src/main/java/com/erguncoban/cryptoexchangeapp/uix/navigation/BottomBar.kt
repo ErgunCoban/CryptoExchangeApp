@@ -169,15 +169,11 @@ fun BottomBar(startDestination: String){
             }
 
             composable("depositScreen"){
-                DepositScreen(navController = navController){amount ->
-                    println("Amount Deposited: $amount")
-                }
+                DepositScreen(navController = navController)
             }
 
             composable("withdrawScreen"){
-                WithdrawScreen(navController = navController){amount ->
-                    println("Withdrawn Amount: $amount")
-                }
+                WithdrawScreen(navController = navController)
             }
 
             composable("transferScreen"){

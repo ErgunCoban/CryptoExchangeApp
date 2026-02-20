@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.erguncoban.cryptoexchangeapp.components.CryptoButton
 import com.erguncoban.cryptoexchangeapp.components.CryptoTextField
@@ -25,10 +27,14 @@ import com.erguncoban.cryptoexchangeapp.components.SimpleTopBar
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoBlackBackground
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoGray
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoYellow
+import com.erguncoban.cryptoexchangeapp.uix.viewmodel.WithdrawViewModel
 
 @Composable
-fun WithdrawScreen(navController: NavController, currentBalance: Double = 12450.25, onWithdrawClick: (Double) -> Unit) {
+fun WithdrawScreen(navController: NavController, viewModel: WithdrawViewModel = hiltViewModel()) {
+
     var amount by remember { mutableStateOf("") }
+
+    val currentBalance by viewModel.balance.collectAsState()
 
     Scaffold(
         containerColor = CryptoBlackBackground,
@@ -46,8 +52,10 @@ fun WithdrawScreen(navController: NavController, currentBalance: Double = 12450.
                 color = CryptoGray,
                 fontSize = 14.sp
             )
+
+            val formattedBalance = String.format("$%,.2f", currentBalance)
             Text(
-                text = "$$currentBalance",
+                text = "$formattedBalance",
                 color = CryptoYellow,
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
@@ -66,9 +74,9 @@ fun WithdrawScreen(navController: NavController, currentBalance: Double = 12450.
             CryptoButton(
                 text = "Withdraw Funds",
                 onClick = {
-                    if (amount.isNotEmpty() && amount.toDouble() <= currentBalance) {
-                        onWithdrawClick(amount.toDouble())
-                        navController.popBackStack()
+                    val amountDouble = amount.toDoubleOrNull() ?: 0.0
+                    if (amountDouble > 0) {
+                        viewModel.withdraw(amountDouble, currentBalance)
                     }
                 }
             )

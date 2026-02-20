@@ -2,7 +2,6 @@ package com.erguncoban.cryptoexchangeapp.data.datasource
 
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.tasks.await
-import java.lang.Exception
 import javax.inject.Inject
 
 class FirebaseAuthDataSource @Inject constructor(private val firebaseAuth: FirebaseAuth) {
@@ -31,6 +30,10 @@ class FirebaseAuthDataSource @Inject constructor(private val firebaseAuth: Fireb
 
     fun logout(){
         firebaseAuth.signOut()
+    }
+
+    fun getCurrentUserUid() : String?{
+        return firebaseAuth.currentUser?.uid
     }
 
 }
