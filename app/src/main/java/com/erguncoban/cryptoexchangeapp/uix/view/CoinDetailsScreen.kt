@@ -51,6 +51,7 @@ fun CoinDetailsScreen(navController: NavController,
         topBar = {
             CoinDetailsTopBar(
                 navController,
+                viewModel,
                 coinDetail,
                 selectedTabIndex,
                 onTabSelected = { index ->

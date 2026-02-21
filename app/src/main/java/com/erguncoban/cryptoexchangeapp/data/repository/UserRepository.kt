@@ -18,4 +18,12 @@ class UserRepository @Inject constructor(private val dataSource: UserRemoteDataS
         return dataSource.updateBalance(uid, amount)
     }
 
+    suspend fun toggleFavorite(uid: String, coinID: String, isAdd: Boolean) : Boolean{
+        return dataSource.toggleFavorite(uid, coinID, isAdd)
+    }
+
+    fun getFavoriteCoins(uid: String) : Flow<List<String>> {
+        return dataSource.getFavoriteCoins(uid)
+    }
+
 }

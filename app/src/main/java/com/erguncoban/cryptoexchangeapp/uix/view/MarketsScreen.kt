@@ -60,7 +60,7 @@ fun MarketsScreen(navController: NavController, marketsViewModel: MarketsViewMod
 
                 when (selectedTab.value) {
                     0 -> FavoritesTabContent(navController = navController, searchText.value)
-                    1 -> MarketsTabContent(navController = navController, marketsViewModel, searchText.value)
+                    1 -> MarketsTabContent(navController = navController, searchText.value)
                 }
 
             }

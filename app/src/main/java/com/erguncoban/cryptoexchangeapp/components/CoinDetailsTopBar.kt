@@ -15,10 +15,8 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,14 +29,20 @@ import com.erguncoban.cryptoexchangeapp.R
 import com.erguncoban.cryptoexchangeapp.data.entity.CryptoDetailResponse
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoWhite
 import com.erguncoban.cryptoexchangeapp.ui.theme.YellowTheme
+import com.erguncoban.cryptoexchangeapp.uix.viewmodel.CoinDetailsViewModel
 
 @Composable
 fun CoinDetailsTopBar(navController: NavController,
+                      viewModel: CoinDetailsViewModel,
                       coin: CryptoDetailResponse?,
                       selectedTabIndex: Int,
                       onTabSelected: (Int) -> Unit){
 
-    var isFavorite by remember { mutableStateOf(false) }
+    val favoriteCoins by viewModel.favoriteCoins.collectAsState()
+    val coinId = coin?.id ?: ""
+
+    val isFavorite = favoriteCoins.contains(coinId)
+
     val tabs = listOf("Price", "Info")
 
     Column {
@@ -79,7 +83,9 @@ fun CoinDetailsTopBar(navController: NavController,
             ) {
                 IconButton(
                     onClick = {
-                        isFavorite = !isFavorite
+                        if (coinId.isNotEmpty()) {
+                            viewModel.onFavoriteClick(coinId)
+                        }
                     }
                 ) {
                     Icon(
@@ -100,7 +106,7 @@ fun CoinDetailsTopBar(navController: NavController,
 
                 IconButton(
                     onClick = {
-                        //bildirimler sayfasına geçiş
+                        navController.navigate("notificationsScreen")
                     }
                 ) {
                     Icon(

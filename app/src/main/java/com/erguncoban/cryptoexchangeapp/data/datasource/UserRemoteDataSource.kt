@@ -57,4 +57,36 @@ class UserRemoteDataSource @Inject constructor(private val firestore: FirebaseFi
         }
     }
 
+    suspend fun toggleFavorite(uid: String, coinId: String, isAdd: Boolean) : Boolean {
+        return try {
+            val userRef = firestore.collection("users").document(uid)
+
+            if (isAdd){
+                userRef.update("favoriteCoins", FieldValue.arrayUnion(coinId)).await()
+            }else{
+                userRef.update("favoriteCoins", FieldValue.arrayRemove(coinId)).await()
+            }
+            true
+        }catch (e: Exception){
+            false
+        }
+    }
+
+    fun getFavoriteCoins(uid: String) : Flow<List<String>> = callbackFlow {
+        val documentRef = firestore.collection("users").document(uid)
+
+        val listener = documentRef.addSnapshotListener { snapshot, error ->
+            if (error != null){
+                close(error)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null && snapshot.exists()){
+                val favorites = snapshot.get("favoriteCoins") as? List<String> ?: emptyList()
+                trySend(favorites)
+            }
+        }
+        awaitClose { listener.remove() }
+    }
+
 }

@@ -7,14 +7,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.erguncoban.cryptoexchangeapp.uix.viewmodel.MarketsViewModel
 
 @Composable
 fun MarketsTabContent(
     navController: NavController,
-    viewModel: MarketsViewModel,
-    searchText: String
+    searchText: String,
+    viewModel: MarketsViewModel = hiltViewModel()
 ) {
 
     val coinList by viewModel.coinList.collectAsState(initial = emptyList())
