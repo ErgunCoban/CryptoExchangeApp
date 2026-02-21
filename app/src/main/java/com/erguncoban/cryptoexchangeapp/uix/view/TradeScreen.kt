@@ -23,7 +23,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,6 +46,9 @@ import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoWhite
 import com.erguncoban.cryptoexchangeapp.ui.theme.MarketGreen
 import com.erguncoban.cryptoexchangeapp.ui.theme.MarketRed
 import com.erguncoban.cryptoexchangeapp.uix.viewmodel.TradeScreenViewModel
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
 val InputBackground = Color(0xFF1E1E1E)
 
@@ -72,23 +74,35 @@ fun TradeScreen(
     var priceText by remember { mutableStateOf("") }
     var amountText by remember { mutableStateOf("") }
 
-    val totalText: String = try {
-        val price = priceText.toDoubleOrNull() ?: 0.0
-        val amount = amountText.toDoubleOrNull() ?: 0.0
-        if (price > 0 && amount > 0) String.format("%.2f", price * amount) else "0.00"
-    } catch (e: Exception) { "0.00" }
-
     val activeColor = if (isBuySelected) MarketGreen else MarketRed
-    val buttonText = if (isBuySelected) "Buy BTC" else "Sell BTC"
+    val buttonText = if (isBuySelected) "Buy ${selectedCoin?.symbol?.uppercase()}" else "Sell ${selectedCoin?.symbol?.uppercase()}"
 
-    val availableUSDT = 12450.25
-    val availableBTC = 0.2541
-    val currentBalanceText = if (isBuySelected) "$$availableUSDT Available" else "$availableBTC BTC Available"
+    val currentPrice = selectedCoin?.current_price ?: 0.0
+    val availableUSDT by viewModel.balance.collectAsState()
+    val availableCOIN = if (currentPrice > 0){
+        availableUSDT / currentPrice
+    }else{
+        0.0
+    }
 
-    LaunchedEffect(selectedCoin) {
-        selectedCoin?.let {
-            priceText = it.current_price.toString()
+    val symbols = DecimalFormatSymbols(Locale("tr", "TR"))
+
+    val coinFormatter = DecimalFormat("#,##0.#####", symbols)
+    val usdFormatter = DecimalFormat("#,##0.00", symbols)
+
+    val currentBalanceText = if (isBuySelected) "$${usdFormatter.format(availableUSDT)} Available" else "${coinFormatter.format(availableCOIN)} ${selectedCoin?.symbol?.uppercase()} Available"
+
+    val totalText: String = try {
+        val safeAmountText = amountText.replace(",", ".")
+        val amount = safeAmountText.toDoubleOrNull() ?: 0.0
+
+        if(currentPrice > 0 && amount > 0){
+            usdFormatter.format(currentPrice * amount)
+        }else{
+            "0,00"
         }
+    }catch (e: Exception){
+        "0,00"
     }
 
     Scaffold(
@@ -134,14 +148,25 @@ fun TradeScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             TradeLabel(text = "Price (USDT)")
-            TradeInputField(
-                value = priceText,
-                onValueChange = { priceText = it }
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .background(InputBackground, RoundedCornerShape(12.dp))
+                    .border(1.dp, CryptoDarkGray, RoundedCornerShape(12.dp))
+                    .padding(horizontal = 16.dp),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Text(
+                    text = if (currentPrice > 0) "$currentPrice" else "Loading...",
+                    color = Color.Gray,
+                    fontSize = 18.sp
+                )
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            TradeLabel(text = "Amount (BTC)")
+            TradeLabel(text = "Amount (${selectedCoin?.symbol?.uppercase()})")
             TradeInputField(
                 value = amountText,
                 onValueChange = { amountText = it }
@@ -152,10 +177,25 @@ fun TradeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                listOf("25%", "50%", "75%", "100%").forEach { percent ->
-                    PercentButton(text = percent) {
-                        // Mantığını ekliycem
-                        // Şimdilik sadece görsel
+                val percentages = listOf(
+                    Pair("25%", 0.25),
+                    Pair("50%", 0.50),
+                    Pair("75%", 0.75),
+                    Pair("100%", 1.00)
+                )
+                percentages.forEach { (text, ratio) ->
+                    PercentButton(text = text) {
+                        if (currentPrice > 0){
+                            val calculatedAmount = if (isBuySelected){
+                                val usdtToSpend = availableUSDT * ratio
+                                usdtToSpend / currentPrice
+                            }else{
+                                availableCOIN * ratio
+                            }
+                            val safeFormattedAmount = String.format(Locale.US, "%.5f", calculatedAmount)
+
+                            amountText = safeFormattedAmount.trimEnd('0').trimEnd('.')
+                        }
                     }
                 }
             }

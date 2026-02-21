@@ -28,6 +28,9 @@ import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoBlackBackground
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoGray
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoYellow
 import com.erguncoban.cryptoexchangeapp.uix.viewmodel.WithdrawViewModel
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
 @Composable
 fun WithdrawScreen(navController: NavController, viewModel: WithdrawViewModel = hiltViewModel()) {
@@ -35,6 +38,9 @@ fun WithdrawScreen(navController: NavController, viewModel: WithdrawViewModel = 
     var amount by remember { mutableStateOf("") }
 
     val currentBalance by viewModel.balance.collectAsState()
+
+    val symbols = DecimalFormatSymbols(Locale("tr", "TR"))
+    val usdFormatter = DecimalFormat("#,##0.00", symbols)
 
     Scaffold(
         containerColor = CryptoBlackBackground,
@@ -53,9 +59,8 @@ fun WithdrawScreen(navController: NavController, viewModel: WithdrawViewModel = 
                 fontSize = 14.sp
             )
 
-            val formattedBalance = String.format("$%,.2f", currentBalance)
             Text(
-                text = "$formattedBalance",
+                text = "${usdFormatter.format(currentBalance)}",
                 color = CryptoYellow,
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,

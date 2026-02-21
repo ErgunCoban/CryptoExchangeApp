@@ -26,6 +26,7 @@ class TradeScreenViewModel @Inject constructor(private val repository: CoinRepos
 
     init {
         loadCoin()
+        startListeningBalance()
     }
 
     fun loadCoin(){

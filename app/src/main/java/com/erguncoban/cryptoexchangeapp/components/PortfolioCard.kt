@@ -30,11 +30,17 @@ import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoWhite
 import com.erguncoban.cryptoexchangeapp.ui.theme.MarketGreen
 import com.erguncoban.cryptoexchangeapp.ui.theme.TextGray
 import com.erguncoban.cryptoexchangeapp.ui.theme.YellowTheme
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
 @Composable
 fun PortfolioCard(balance: Double){
 
     val isVisible = remember { mutableStateOf(true) }
+
+    val symbols = DecimalFormatSymbols(Locale("tr", "TR"))
+    val usdFormatter = DecimalFormat("#,##0.00", symbols)
 
     Card(
         modifier = Modifier
@@ -64,10 +70,9 @@ fun PortfolioCard(balance: Double){
                 verticalAlignment = Alignment.CenterVertically,
             ) {
 
-                val formattedBalance = String.format("$%,.2f", balance)
                 Text(
                     text = if (isVisible.value){
-                        " $formattedBalance"
+                        " ${usdFormatter.format(balance)}"
                     }else{
                         " $*******"
                     },

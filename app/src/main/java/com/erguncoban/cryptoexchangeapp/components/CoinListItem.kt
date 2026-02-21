@@ -28,9 +28,15 @@ import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoGray
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoWhite
 import com.erguncoban.cryptoexchangeapp.ui.theme.MarketGreen
 import com.erguncoban.cryptoexchangeapp.ui.theme.MarketRed
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
 @Composable
 fun CoinListItem(coin: CryptoCoin, onClick: (String) -> Unit){
+
+    val symbols = DecimalFormatSymbols(Locale("tr", "TR"))
+    val usdFormatter = DecimalFormat("#,##0.00", symbols)
 
     Row(
         modifier = Modifier
@@ -75,7 +81,7 @@ fun CoinListItem(coin: CryptoCoin, onClick: (String) -> Unit){
         }
 
         Text(
-            text = "$${String.format("%,.2f", coin.current_price)}",
+            text = "$${usdFormatter.format(coin?.current_price)}",
             color = CryptoWhite,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
