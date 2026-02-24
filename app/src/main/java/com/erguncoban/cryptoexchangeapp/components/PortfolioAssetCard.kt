@@ -33,7 +33,7 @@ import java.text.DecimalFormatSymbols
 import java.util.Locale
 
 @Composable
-fun PortfolioAssetCard(balance: Double){
+fun PortfolioAssetCard(balance: Double, btcEquivalent: Double){
 
     val isVisible = remember { mutableStateOf(true) }
 
@@ -102,7 +102,7 @@ fun PortfolioAssetCard(balance: Double){
             ) {
 
                 Text(
-                    text = "≈ 0.25 BTC",
+                    text = "≈ ${usdFormatter.format(btcEquivalent)} BTC",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
                     color = CryptoGray

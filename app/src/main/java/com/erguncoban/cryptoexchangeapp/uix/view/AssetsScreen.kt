@@ -12,6 +12,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -32,7 +33,13 @@ import com.erguncoban.cryptoexchangeapp.uix.viewmodel.AssetsViewModel
 @Composable
 fun AssetsScreen(navController: NavController, assetsViewModel: AssetsViewModel = hiltViewModel()){
 
-    val currentBalance by assetsViewModel.balance.collectAsState()
+    val totalBalance by assetsViewModel.balance.collectAsState()
+
+    val btcEquivalent by assetsViewModel.btcEquivalent.collectAsState()
+
+    LaunchedEffect(totalBalance) {
+        assetsViewModel.calculateBtcEquivalent(totalBalance)
+    }
 
     Scaffold(
         topBar = {
@@ -50,7 +57,7 @@ fun AssetsScreen(navController: NavController, assetsViewModel: AssetsViewModel 
         ) {
 
             item {
-                PortfolioAssetCard(currentBalance)
+                PortfolioAssetCard(totalBalance, btcEquivalent)
                 Spacer(modifier = Modifier.size(16.dp))
             }
 
