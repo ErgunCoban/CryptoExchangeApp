@@ -33,7 +33,7 @@ import com.erguncoban.cryptoexchangeapp.uix.viewmodel.AssetsViewModel
 @Composable
 fun AssetsScreen(navController: NavController, assetsViewModel: AssetsViewModel = hiltViewModel()){
 
-    val totalBalance by assetsViewModel.balance.collectAsState()
+    val totalBalance by assetsViewModel.totalPortfolioValue.collectAsState()
 
     val btcEquivalent by assetsViewModel.btcEquivalent.collectAsState()
 

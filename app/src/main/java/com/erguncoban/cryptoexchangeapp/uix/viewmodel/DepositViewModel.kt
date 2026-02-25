@@ -11,7 +11,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DepositViewModel @Inject constructor(private val userRepository: UserRepository, private val authRepository: FirebaseAuthRepository) : ViewModel(){
+class DepositViewModel @Inject constructor(private val userRepository: UserRepository,
+                                           private val authRepository: FirebaseAuthRepository) : ViewModel(){
 
     var isLoading = mutableStateOf(false)
         private set

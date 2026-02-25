@@ -79,18 +79,20 @@ fun TradeScreen(
 
     val currentPrice = selectedCoin?.current_price ?: 0.0
     val availableUSDT by viewModel.balance.collectAsState()
-    val availableCOIN = if (currentPrice > 0){
-        availableUSDT / currentPrice
-    }else{
-        0.0
-    }
+
+    val portfolioItems by viewModel.portfolioItems.collectAsState()
+    val availableCOIN = portfolioItems.find { it.coinId == selectedCoin?.id }?.amount ?: 0.0
 
     val symbols = DecimalFormatSymbols(Locale("tr", "TR"))
 
     val coinFormatter = DecimalFormat("#,##0.#####", symbols)
     val usdFormatter = DecimalFormat("#,##0.00", symbols)
 
-    val currentBalanceText = if (isBuySelected) "$${usdFormatter.format(availableUSDT)} Available" else "${coinFormatter.format(availableCOIN)} ${selectedCoin?.symbol?.uppercase()} Available"
+    val currentBalanceText = if (isBuySelected) {
+        "$${usdFormatter.format(availableUSDT)} Available"
+    } else {
+        "${coinFormatter.format(availableCOIN)} ${selectedCoin?.symbol?.uppercase()} Available"
+    }
 
     val totalText: String = try {
         val safeAmountText = amountText.replace(",", ".")
@@ -227,12 +229,20 @@ fun TradeScreen(
 
             Button(
                 onClick = {
-                    if (priceText.isNotEmpty() && amountText.isNotEmpty()) {
+                    val amount = amountText.toDoubleOrNull()
+                    val currentPrice = selectedCoin?.current_price
+
+                    if (amount != null && amount > 0 && currentPrice != null) {
                         onTradeClick(
-                            isBuySelected,
-                            priceText.toDoubleOrNull() ?: 0.0,
-                            amountText.toDoubleOrNull() ?: 0.0
+                            isBuySelected, currentPrice, amount
                         )
+                        if (isBuySelected){
+                            viewModel.buyCoin(selectedCoin.id, amount, currentPrice)
+                        }else{
+                            viewModel.sellCoin(selectedCoin.id, amount, currentPrice)
+                        }
+                    }else{
+                        println("ERROR: A valid amount was not entered or the price could not be read.")
                     }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = activeColor),
