@@ -1,14 +1,19 @@
 package com.erguncoban.cryptoexchangeapp.data.datasource
 
+import android.util.Log
+import com.erguncoban.cryptoexchangeapp.data.entity.TradeHistory
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class UserRemoteDataSource @Inject constructor(private val firestore: FirebaseFirestore) {
+class UserRemoteDataSource @Inject constructor(private val auth: FirebaseAuth,
+                                               private val firestore: FirebaseFirestore) {
 
     suspend fun createUserProfile(uid: String, email: String) : Boolean{
         return try {
@@ -46,13 +51,50 @@ class UserRemoteDataSource @Inject constructor(private val firestore: FirebaseFi
 
     }
 
-    suspend fun updateBalance(uid: String, amount: Double) : Boolean{
-        return try{
-            firestore.collection("users").document(uid)
-                .update("balance", FieldValue.increment(amount))
-                .await()
+    suspend fun updateBalance(amount: Double) : Boolean{
+        return try {
+            val userId = auth.currentUser?.uid ?: throw Exception("User session not found")
+
+            val userRef = firestore.collection("users").document(userId)
+            val portfolioRef = userRef.collection("portfolio").document("usdt")
+            val tradeRef = userRef.collection("trades").document()
+
+            firestore.runTransaction { transaction ->
+
+                val userSnapshot = transaction.get(userRef)
+                val currentBalance = userSnapshot.getDouble("balance") ?: 0.0
+                val newBalance = currentBalance + amount
+
+                val portfolioSnapshot = transaction.get(portfolioRef)
+                val currentCoinAmount = portfolioSnapshot.getDouble("amount") ?: 0.0
+                val currentTotalInvested = portfolioSnapshot.getDouble("totalInvested") ?: 0.0
+
+                val newCoinAmount = currentCoinAmount + amount
+                val newTotalInvested = currentTotalInvested + amount
+
+                val portfolioUpdates = mapOf(
+                    "amount" to newCoinAmount,
+                    "totalInvested" to newTotalInvested,
+                    "lastUpdated" to System.currentTimeMillis()
+                )
+
+                val tradeData = TradeHistory(
+                    coinId = "usdt",
+                    type = "DEPOSIT",
+                    amount = amount,
+                    price = 1.0,
+                    totalVolume = amount
+                )
+
+                transaction.set(userRef, mapOf("balance" to newBalance), SetOptions.merge())
+                transaction.set(portfolioRef, portfolioUpdates, SetOptions.merge())
+                transaction.set(tradeRef, tradeData)
+
+                null
+            }.await()
             true
         }catch (e: Exception){
+            Log.e("REPO_ERROR", "Firebase Transaction Patladı: ${e.message}", e)
             false
         }
     }

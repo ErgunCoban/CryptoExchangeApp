@@ -14,8 +14,8 @@ class UserRepository @Inject constructor(private val dataSource: UserRemoteDataS
         return dataSource.getUserBalance(uid)
     }
 
-    suspend fun updateBalance(uid: String, amount: Double) : Boolean{
-        return dataSource.updateBalance(uid, amount)
+    suspend fun updateBalance(amount: Double) : Boolean{
+        return dataSource.updateBalance(amount)
     }
 
     suspend fun toggleFavorite(uid: String, coinID: String, isAdd: Boolean) : Boolean{

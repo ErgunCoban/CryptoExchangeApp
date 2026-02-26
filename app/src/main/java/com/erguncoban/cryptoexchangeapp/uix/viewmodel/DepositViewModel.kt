@@ -26,7 +26,7 @@ class DepositViewModel @Inject constructor(private val userRepository: UserRepos
             viewModelScope.launch {
                 isLoading.value = true
                 transactionMessage.value = null
-                val success = userRepository.updateBalance(uid, amount)
+                val success = userRepository.updateBalance(amount)
                 if (success) {
                     Log.d("FIREBASE_UPDATE", "Deposit is success: $amount")
                 } else {

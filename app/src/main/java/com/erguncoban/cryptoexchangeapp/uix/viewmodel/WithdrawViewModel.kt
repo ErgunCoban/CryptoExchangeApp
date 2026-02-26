@@ -46,7 +46,7 @@ class WithdrawViewModel @Inject constructor(private val userRepository: UserRepo
                 viewModelScope.launch {
                     isLoading.value = true
                     transactionMessage.value = null
-                    val success = userRepository.updateBalance(uid, -amount)
+                    val success = userRepository.updateBalance(-amount)
                     if (success) {
                         transactionMessage.value = "Withdraw successful"
                         Log.d("FIREBASE_UPDATE", "Withdraw is success: $amount")

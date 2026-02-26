@@ -2,6 +2,7 @@ package com.erguncoban.cryptoexchangeapp.di
 
 import com.erguncoban.cryptoexchangeapp.data.datasource.UserRemoteDataSource
 import com.erguncoban.cryptoexchangeapp.data.repository.UserRepository
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
@@ -15,8 +16,8 @@ class UserModule {
 
     @Provides
     @Singleton
-    fun provideUserRemoteDataSource(firestore: FirebaseFirestore) : UserRemoteDataSource{
-        return UserRemoteDataSource(firestore)
+    fun provideUserRemoteDataSource(auth: FirebaseAuth, firestore: FirebaseFirestore) : UserRemoteDataSource{
+        return UserRemoteDataSource(auth, firestore)
     }
 
     @Provides

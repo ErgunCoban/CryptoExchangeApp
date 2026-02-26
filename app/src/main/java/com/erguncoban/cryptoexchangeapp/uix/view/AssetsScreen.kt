@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.erguncoban.cryptoexchangeapp.R
+import com.erguncoban.cryptoexchangeapp.components.AssetRowItem
 import com.erguncoban.cryptoexchangeapp.components.PortfolioAssetCard
 import com.erguncoban.cryptoexchangeapp.components.QuickActionButton
 import com.erguncoban.cryptoexchangeapp.components.TopBarAsset
@@ -36,6 +38,8 @@ fun AssetsScreen(navController: NavController, assetsViewModel: AssetsViewModel 
     val totalBalance by assetsViewModel.totalPortfolioValue.collectAsState()
 
     val btcEquivalent by assetsViewModel.btcEquivalent.collectAsState()
+
+    val assetList by assetsViewModel.assetUiList.collectAsState()
 
     LaunchedEffect(totalBalance) {
         assetsViewModel.calculateBtcEquivalent(totalBalance)
@@ -107,6 +111,10 @@ fun AssetsScreen(navController: NavController, assetsViewModel: AssetsViewModel 
                         color = CryptoWhite
                     )
                 }
+            }
+
+            items(assetList){ asset ->
+                AssetRowItem(asset = asset)
             }
 
         }
