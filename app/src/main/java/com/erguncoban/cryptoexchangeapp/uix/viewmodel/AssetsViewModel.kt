@@ -6,26 +6,18 @@ import androidx.lifecycle.viewModelScope
 import com.erguncoban.cryptoexchangeapp.data.entity.AssetItemUiModel
 import com.erguncoban.cryptoexchangeapp.data.entity.PortfolioItem
 import com.erguncoban.cryptoexchangeapp.data.repository.CoinRepository
-import com.erguncoban.cryptoexchangeapp.data.repository.FirebaseAuthRepository
 import com.erguncoban.cryptoexchangeapp.data.repository.PortfolioRepository
-import com.erguncoban.cryptoexchangeapp.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AssetsViewModel @Inject constructor(
-    private val authRepository: FirebaseAuthRepository,
-    private val userRepository: UserRepository,
     private val coinRepository: CoinRepository,
     private val portfolioRepository: PortfolioRepository
 ) : ViewModel() {
-
-    private val _balance = MutableStateFlow(0.0)
-    val balance = _balance.asStateFlow()
 
     private val _portfolioItems = MutableStateFlow<List<PortfolioItem>>(emptyList())
     val portfolioItems = _portfolioItems.asStateFlow()
@@ -40,20 +32,8 @@ class AssetsViewModel @Inject constructor(
     val assetUiList = _assetUiList.asStateFlow()
 
     init {
-        startListeningBalance()
         startListeningPortfolio()
         observeTotalValue()
-    }
-
-    private fun startListeningBalance() {
-        val uid = authRepository.getCurrentUserUid()
-        uid?.let { id ->
-            viewModelScope.launch {
-                userRepository.getUserBalance(id).collect { newBalance ->
-                    _balance.value = newBalance
-                }
-            }
-        }
     }
 
     private fun startListeningPortfolio() {
@@ -66,40 +46,52 @@ class AssetsViewModel @Inject constructor(
 
     private fun observeTotalValue() {
         viewModelScope.launch {
-            combine(balance, portfolioItems) { currentUsd, items ->
+            portfolioItems.collect { items ->
                 var totalCoinValue = 0.0
                 val uiList = mutableListOf<AssetItemUiModel>()
 
                 items.forEach { item ->
                     try {
-                        val coinData = coinRepository.getCoinById(item.coinId)
-                        val currentPrice = coinData?.current_price ?: 0.0
-                        val itemTotalValue = item.amount * currentPrice
+                        val currentPrice: Double
+                        val name: String
+                        val symbol: String
+                        val imageUrl: String?
 
+                        if (item.coinId.lowercase() == "usdt"){
+                            currentPrice = 1.0
+                            name = "Tether"
+                            symbol = "USDT"
+                            imageUrl = "https://assets.coingecko.com/coins/images/325/large/Usdt.png"
+                        }else{
+                            val coinData = coinRepository.getCoinById(item.coinId)
+                            currentPrice = coinData?.current_price ?: 0.0
+                            name = coinData?.name ?: item.coinId.replaceFirstChar { it.uppercase() }
+                            symbol = coinData?.symbol?.uppercase() ?: item.coinId.uppercase()
+                            imageUrl = coinData ?.imageUrl
+                        }
+
+                        val itemTotalValue = item.amount * currentPrice
                         totalCoinValue += itemTotalValue
 
                         uiList.add(
                             AssetItemUiModel(
                                 coinId = item.coinId,
-                                name = coinData?.name ?: "",
-                                symbol = coinData?.symbol?.uppercase() ?: item.coinId.uppercase(),
+                                name = name,
+                                symbol = symbol,
                                 amount = item.amount,
                                 currentPrice = currentPrice,
                                 totalValue = itemTotalValue,
-                                imageUrl = coinData?.imageUrl
+                                imageUrl = imageUrl
                             )
                         )
-
-                    } catch (e: Exception) {
-                        Log.e("ASSETS_ERROR", "${item.coinId} fiyatı alınamadı: ${e.message}")
+                    }catch (e: Exception){
+                        Log.e("ASSETS_ERROR", "${item.coinId} alınamadı: ${e.message}")
                     }
                 }
-                _assetUiList.value = uiList
-                currentUsd + totalCoinValue
 
-            }.collect { finalTotalValue ->
-                _totalPortfolioValue.value = finalTotalValue
-                calculateBtcEquivalent(finalTotalValue)
+                _assetUiList.value = uiList
+                _totalPortfolioValue.value = totalCoinValue
+                calculateBtcEquivalent(totalCoinValue)
             }
         }
     }

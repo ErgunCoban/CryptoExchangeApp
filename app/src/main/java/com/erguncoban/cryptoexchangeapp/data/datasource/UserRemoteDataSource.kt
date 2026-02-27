@@ -19,7 +19,7 @@ class UserRemoteDataSource @Inject constructor(private val auth: FirebaseAuth,
         return try {
             val userMap = hashMapOf(
                 "email" to email,
-                "balance" to 10000.0
+                "balance" to 0.0
             )
             firestore.collection("users").document(uid).set(userMap).await()
             true
@@ -56,16 +56,13 @@ class UserRemoteDataSource @Inject constructor(private val auth: FirebaseAuth,
             val userId = auth.currentUser?.uid ?: throw Exception("User session not found")
 
             val userRef = firestore.collection("users").document(userId)
-            val portfolioRef = userRef.collection("portfolio").document("usdt")
+            val portfolioRef = userRef.collection("portfolio").document("tether")
             val tradeRef = userRef.collection("trades").document()
 
             firestore.runTransaction { transaction ->
 
-                val userSnapshot = transaction.get(userRef)
-                val currentBalance = userSnapshot.getDouble("balance") ?: 0.0
-                val newBalance = currentBalance + amount
-
                 val portfolioSnapshot = transaction.get(portfolioRef)
+
                 val currentCoinAmount = portfolioSnapshot.getDouble("amount") ?: 0.0
                 val currentTotalInvested = portfolioSnapshot.getDouble("totalInvested") ?: 0.0
 
@@ -79,14 +76,13 @@ class UserRemoteDataSource @Inject constructor(private val auth: FirebaseAuth,
                 )
 
                 val tradeData = TradeHistory(
-                    coinId = "usdt",
+                    coinId = "tether",
                     type = "DEPOSIT",
                     amount = amount,
                     price = 1.0,
                     totalVolume = amount
                 )
 
-                transaction.set(userRef, mapOf("balance" to newBalance), SetOptions.merge())
                 transaction.set(portfolioRef, portfolioUpdates, SetOptions.merge())
                 transaction.set(tradeRef, tradeData)
 
@@ -94,7 +90,7 @@ class UserRemoteDataSource @Inject constructor(private val auth: FirebaseAuth,
             }.await()
             true
         }catch (e: Exception){
-            Log.e("REPO_ERROR", "Firebase Transaction Patladı: ${e.message}", e)
+            Log.e("REPO_ERROR", "DEPOSIT PATLADI: ${e.message}", e)
             false
         }
     }

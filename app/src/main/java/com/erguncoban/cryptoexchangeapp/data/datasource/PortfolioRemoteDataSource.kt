@@ -1,5 +1,6 @@
 package com.erguncoban.cryptoexchangeapp.data.datasource
 
+import android.util.Log
 import com.erguncoban.cryptoexchangeapp.data.entity.PortfolioItem
 import com.erguncoban.cryptoexchangeapp.data.entity.TradeHistory
 import com.google.firebase.auth.FirebaseAuth
@@ -21,37 +22,44 @@ class PortfolioRemoteDataSource @Inject constructor(private val firestore: Fireb
             val totalCost = amount * currentPrice
 
             val userRef = firestore.collection("users").document(userId)
-            val portfolioRef = userRef.collection("portfolio").document(coinId)
+            val tetherRef = userRef.collection("portfolio").document("tether")
+            val coinRef = userRef.collection("portfolio").document(coinId)
             val tradeRef = userRef.collection("trades").document()
 
             firestore.runTransaction { transaction ->
 
-                val userSnapshot = transaction.get(userRef)
-                val currentBalance = userSnapshot.getDouble("balance") ?: 0.0
+                val tetherSnapshot = transaction.get(tetherRef)
+                val coinSnapshot = transaction.get(coinRef)
 
-                if (currentBalance < totalCost){
+                val currentTetherAmount = tetherSnapshot.getDouble("amount") ?: 0.0
+
+                if (currentTetherAmount < totalCost) {
                     throw FirebaseFirestoreException(
-                        "Insufficient balance. Current: $currentBalance, Requested: $totalCost",
+                        "Insufficient USDT balance. Current: $currentTetherAmount, Requested: $totalCost",
                         FirebaseFirestoreException.Code.ABORTED
                     )
                 }
 
-                val portfolioSnapshot = transaction.get(portfolioRef)
-                val currentCoinAmount = portfolioSnapshot.getDouble("amount") ?: 0.0
-                val currentTotalInvested = portfolioSnapshot.getDouble("totalInvested") ?: 0.0
+                val newTetherAmount = currentTetherAmount - totalCost
 
-                val newBalance = currentBalance - totalCost
+                val currentCoinAmount = coinSnapshot.getDouble("amount") ?: 0.0
+                val currentTotalInvested = coinSnapshot.getDouble("totalInvested") ?: 0.0
+
                 val newCoinAmount = currentCoinAmount + amount
                 val newTotalInvested = currentTotalInvested + totalCost
 
-                transaction.update(userRef, "balance", newBalance)
+                val tetherUpdates = mapOf(
+                    "amount" to newTetherAmount,
+                    "lastUpdated" to System.currentTimeMillis()
+                )
+                transaction.set(tetherRef, tetherUpdates, SetOptions.merge())
 
                 val portfolioUpdates = mapOf(
                     "amount" to newCoinAmount,
                     "totalInvested" to newTotalInvested,
                     "lastUpdated" to System.currentTimeMillis()
                 )
-                transaction.set(portfolioRef, portfolioUpdates, SetOptions.merge())
+                transaction.set(coinRef, portfolioUpdates, SetOptions.merge())
 
                 val tradeData = TradeHistory(
                     coinId = coinId,
@@ -67,6 +75,7 @@ class PortfolioRemoteDataSource @Inject constructor(private val firestore: Fireb
 
             Result.success(Unit)
         }catch (e: Exception){
+            Log.e("REPO_ERROR", "Buy Coin Patladı: ${e.message}", e)
             Result.failure(e)
         }
     }
@@ -78,51 +87,48 @@ class PortfolioRemoteDataSource @Inject constructor(private val firestore: Fireb
             val totalEarnings = amount * currentPrice
 
             val userRef = firestore.collection("users").document(userId)
-            val portfolioRef = userRef.collection("portfolio").document(coinId)
+            val tetherRef = userRef.collection("portfolio").document("tether")
+            val coinRef = userRef.collection("portfolio").document(coinId)
             val tradeRef = userRef.collection("trades").document()
 
             firestore.runTransaction { transaction ->
 
-                val portfolioSnapshot = transaction.get(portfolioRef)
-                val currentCoinAmount = portfolioSnapshot.getDouble("amount") ?: 0.0
-                val currentTotalInvested = portfolioSnapshot.getDouble("totalInvested") ?: 0.0
+                val tetherSnapshot = transaction.get(tetherRef)
+                val coinSnapshot = transaction.get(coinRef)
+
+                val currentCoinAmount = coinSnapshot.getDouble("amount") ?: 0.0
 
                 if (currentCoinAmount < amount){
                     throw FirebaseFirestoreException(
-                        "Insufficient coin amount. Current: $currentCoinAmount, Required: $amount",
+                        "Insufficient coin balance. Current: $currentCoinAmount, Requested: $amount",
                         FirebaseFirestoreException.Code.ABORTED
                     )
                 }
 
-                val userSnapshot = transaction.get(userRef)
-                val currentBalance = userSnapshot.getDouble("balance") ?: 0.0
+                val currentTetherAmount = tetherSnapshot.getDouble("amount") ?: 0.0
+                val currentTotalInvested = coinSnapshot.getDouble("totalInvested") ?: 0.0
 
-                val newBalance = currentBalance + totalEarnings
                 val newCoinAmount = currentCoinAmount - amount
+                val newTetherAmount = currentTetherAmount + totalEarnings
 
-                val avgCost = if (currentCoinAmount > 0){
-                    currentTotalInvested / currentCoinAmount
-                }else{
-                    0.0
-                }
-                val newTotalInvested = if (newCoinAmount > 0){
-                    newCoinAmount * avgCost
+                val newTotalInvested = if (currentCoinAmount > 0.0){
+                    currentTotalInvested * (newCoinAmount / currentCoinAmount)
                 }else{
                     0.0
                 }
 
-                transaction.update(userRef, "balance", newBalance)
+                val coinUpdates = mapOf(
+                    "amount" to newCoinAmount,
+                    "totalInvested" to newTotalInvested,
+                    "lastUpdated" to System.currentTimeMillis()
+                )
+                transaction.set(coinRef, coinUpdates, SetOptions.merge())
 
-                if (newCoinAmount <= 0.000001){
-                    transaction.delete(portfolioRef)
-                }else{
-                    val portfolioUpdates = mapOf(
-                        "amount" to newCoinAmount,
-                        "totalInvested" to newTotalInvested,
-                        "lastUpdates" to System.currentTimeMillis()
-                    )
-                    transaction.set(portfolioRef, portfolioUpdates, SetOptions.merge())
-                }
+                val tetherUpdates = mapOf(
+                    "amount" to newTetherAmount,
+                    "lastUpdated" to System.currentTimeMillis()
+                )
+                transaction.set(tetherRef, tetherUpdates, SetOptions.merge())
 
                 val tradeData = TradeHistory(
                     coinId = coinId,
@@ -138,9 +144,9 @@ class PortfolioRemoteDataSource @Inject constructor(private val firestore: Fireb
 
             Result.success(Unit)
         }catch (e: Exception){
+            Log.e("REPO_ERROR", "Sell Coin Patladı: ${e.message}", e)
             Result.failure(e)
         }
-
 
     }
 
