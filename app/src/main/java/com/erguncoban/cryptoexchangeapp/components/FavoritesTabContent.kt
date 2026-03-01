@@ -18,6 +18,10 @@ fun FavoritesTabContent(navController: NavController, searchText: String, viewMo
 
     val favoriteCoins by viewModel.favoriteCoinDetails.collectAsState()
 
+    val filteredList = favoriteCoins.filter {
+        it.name.contains(searchText, ignoreCase = true)
+    }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize(),
@@ -25,7 +29,7 @@ fun FavoritesTabContent(navController: NavController, searchText: String, viewMo
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        items(favoriteCoins){ coin ->
+        items(filteredList){ coin ->
             CoinListItem(
                 coin = coin,
                 onClick = { coinId ->

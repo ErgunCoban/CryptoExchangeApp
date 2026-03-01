@@ -94,18 +94,7 @@ fun TradeScreen(
         "${coinFormatter.format(availableCOIN)} ${selectedCoin?.symbol?.uppercase()} Available"
     }
 
-    val totalText: String = try {
-        val safeAmountText = amountText.replace(",", ".")
-        val amount = safeAmountText.toDoubleOrNull() ?: 0.0
-
-        if(currentPrice > 0 && amount > 0){
-            usdFormatter.format(currentPrice * amount)
-        }else{
-            "0,00"
-        }
-    }catch (e: Exception){
-        "0,00"
-    }
+    var totalText by remember { mutableStateOf("") }
 
     Scaffold(
         containerColor = CryptoBlackBackground,
@@ -171,7 +160,19 @@ fun TradeScreen(
             TradeLabel(text = "Amount (${selectedCoin?.symbol?.uppercase()})")
             TradeInputField(
                 value = amountText,
-                onValueChange = { amountText = it }
+                onValueChange = { newAmountEntry ->
+                    amountText = newAmountEntry
+
+                    val safeInput = newAmountEntry.replace(",", ".")
+                    val numberOfAmount = safeInput.toDoubleOrNull()
+
+                    if (numberOfAmount != null){
+                        val calculatedTotalPrice = numberOfAmount * currentPrice
+                        totalText = String.format(Locale.US, "%.2f", calculatedTotalPrice)
+                    }else if (newAmountEntry.isEmpty()){
+                        totalText = ""
+                    }
+                }
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -195,8 +196,10 @@ fun TradeScreen(
                                 availableCOIN * ratio
                             }
                             val safeFormattedAmount = String.format(Locale.US, "%.5f", calculatedAmount)
-
                             amountText = safeFormattedAmount.trimEnd('0').trimEnd('.')
+
+                            val calculatedTotal = calculatedAmount * currentPrice
+                            totalText = String.format(Locale.US, "%.2f", calculatedTotal)
                         }
                     }
                 }
@@ -205,17 +208,22 @@ fun TradeScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             TradeLabel(text = "Total (USDT)")
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .background(InputBackground, RoundedCornerShape(12.dp))
-                    .border(1.dp, CryptoDarkGray, RoundedCornerShape(12.dp))
-                    .padding(horizontal = 16.dp),
-                contentAlignment = Alignment.CenterStart
-            ) {
-                Text(text = totalText, color = Color.Gray, fontSize = 18.sp)
-            }
+            TradeInputField(
+                value = totalText,
+                onValueChange = { newTotalEntry ->
+                    totalText = newTotalEntry
+
+                    val safeInput = newTotalEntry.replace(",", ".")
+                    val numberOfTotal = safeInput.toDoubleOrNull()
+
+                    if (numberOfTotal != null){
+                        val calculatedAmount = numberOfTotal / currentPrice
+                        amountText = String.format(Locale.US, "%.5f", calculatedAmount)
+                    }else if (newTotalEntry.isEmpty()){
+                        amountText = ""
+                    }
+                }
+            )
 
             Spacer(modifier = Modifier.height(8.dp))
 

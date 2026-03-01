@@ -35,7 +35,10 @@ class TradeScreenViewModel @Inject constructor(private val repository: CoinRepos
         viewModelScope.launch {
             try {
                 val result = repository.getCoins()
-                _coinList.value = result
+
+                // USDT/USDT işlem çitfini engellemek adına, trade listesini tetherden arındırdım
+                val filteredList = result.filter { it.id.lowercase() != "tether" }
+                _coinList.value = filteredList
                 Log.e("API_SUCCESS", "Number Of Coins Received: ${result.size}")
             }catch (e: Exception){
                 Log.e("API_FAILED", "Failed The Capture Data: $e")

@@ -21,6 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.erguncoban.cryptoexchangeapp.R
 import com.erguncoban.cryptoexchangeapp.ui.theme.TextGray
+import com.erguncoban.cryptoexchangeapp.uix.view.AssetTransactionsScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.AssetsScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.CoinDetailsScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.DepositScreen
@@ -29,6 +30,7 @@ import com.erguncoban.cryptoexchangeapp.uix.view.LoginScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.MarketsScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.NotificationsScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.SignupScreen
+import com.erguncoban.cryptoexchangeapp.uix.view.SpotTradeHistoryScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.TradeScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.TransferScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.UserProfileScreen
@@ -184,6 +186,14 @@ fun BottomBar(startDestination: String){
 
             composable("notificationsScreen"){
                 NotificationsScreen(navController = navController)
+            }
+
+            composable("assetTransactionsScreen"){
+                AssetTransactionsScreen(navController = navController)
+            }
+
+            composable("spotTradeHistoryScreen"){
+                SpotTradeHistoryScreen(navController = navController)
             }
 
         }
