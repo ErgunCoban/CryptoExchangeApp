@@ -38,6 +38,9 @@ fun CoinListItem(coin: CryptoCoin, onClick: (String) -> Unit){
     val symbols = DecimalFormatSymbols(Locale("tr", "TR"))
     val usdFormatter = DecimalFormat("#,##0.00", symbols)
 
+    //Gelmeyen coin imagelerini proxy üzerinden getirdik.
+    val safeImageUrl = "https://wsrv.nl/?url=${coin.imageUrl}"
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -53,7 +56,7 @@ fun CoinListItem(coin: CryptoCoin, onClick: (String) -> Unit){
             verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
-                model = coin.imageUrl,
+                model = safeImageUrl,
                 contentDescription = "${coin.name} logo",
                 modifier = Modifier
                     .size(44.dp)
