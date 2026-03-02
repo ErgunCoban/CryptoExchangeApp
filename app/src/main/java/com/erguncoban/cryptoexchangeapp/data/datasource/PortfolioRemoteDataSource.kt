@@ -150,6 +150,62 @@ class PortfolioRemoteDataSource @Inject constructor(private val firestore: Fireb
 
     }
 
+    suspend fun withdraw(amount: Double, currentBalance: Double) : Result<Unit>{
+        return try {
+            val userId = auth.currentUser?.uid ?: throw Exception("User session not found")
+
+            val userRef = firestore.collection("users").document(userId)
+            val tetherRef = userRef.collection("portfolio").document("tether")
+            val tradeRef = userRef.collection("trades").document()
+
+            firestore.runTransaction { transaction ->
+
+                val tetherSnapshot = transaction.get(tetherRef)
+                val currentTetherAmount = tetherSnapshot.getDouble("amount") ?: 0.0
+
+                if (currentTetherAmount < amount){
+                    throw FirebaseFirestoreException(
+                        "Insufficient USDT balance. Current: $currentTetherAmount, Requested: $amount",
+                        FirebaseFirestoreException.Code.ABORTED
+                    )
+                }
+
+                val newTetherAmount = currentTetherAmount - amount
+
+                val currentTotalInvested = tetherSnapshot.getDouble("totalInvested") ?: 0.0
+                val newTotalInvested = if (currentTetherAmount > 0.0){
+                    currentTotalInvested * (newTetherAmount / currentTetherAmount)
+                }else{
+                    0.0
+                }
+
+                val tetherUpdates = mapOf(
+                    "amount" to newTetherAmount,
+                    "totalInvested" to newTotalInvested,
+                    "lastUpdated" to System.currentTimeMillis()
+                )
+                transaction.set(tetherRef, tetherUpdates, SetOptions.merge())
+
+                val tradeData = TradeHistory(
+                    coinId = "tether",
+                    type = "WITHDRAW",
+                    amount = amount,
+                    price = 1.0,
+                    totalVolume = amount
+                )
+                transaction.set(tradeRef, tradeData)
+
+                null
+            }.await()
+
+            Result.success(Unit)
+
+        }catch (e: Exception){
+            Log.e("REPO_ERROR", "Withdraw Patladı: ${e.message}", e)
+            Result.failure(e)
+        }
+    }
+
     fun getPortfolioFlow() : Flow<List<PortfolioItem>> = callbackFlow {
         val userId = auth.currentUser?.uid
         if (userId == null){

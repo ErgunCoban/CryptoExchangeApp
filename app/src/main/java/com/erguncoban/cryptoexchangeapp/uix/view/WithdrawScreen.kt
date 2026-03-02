@@ -37,7 +37,7 @@ fun WithdrawScreen(navController: NavController, viewModel: WithdrawViewModel = 
 
     var amount by remember { mutableStateOf("") }
 
-    val currentBalance by viewModel.balance.collectAsState()
+    val currentBalance by viewModel.availableUSDT.collectAsState()
 
     val symbols = DecimalFormatSymbols(Locale("tr", "TR"))
     val usdFormatter = DecimalFormat("#,##0.00", symbols)

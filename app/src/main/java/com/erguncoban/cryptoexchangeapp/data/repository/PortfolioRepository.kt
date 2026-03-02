@@ -13,6 +13,9 @@ class PortfolioRepository @Inject constructor(private val dataSource: PortfolioR
     suspend fun sellCoin(coinId: String, amount: Double, currentPrice: Double) : Result<Unit>
         = dataSource.sellCoin(coinId, amount, currentPrice)
 
+    suspend fun withdraw(amount: Double, currentBalance: Double) : Result<Unit>
+        = dataSource.withdraw(amount, currentBalance)
+
     fun getPortfolioFlow(): Flow<List<PortfolioItem>>
         = dataSource.getPortfolioFlow()
 
