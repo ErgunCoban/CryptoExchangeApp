@@ -179,9 +179,7 @@ fun BottomBar(startDestination: String){
             }
 
             composable("transferScreen"){
-                TransferScreen(navController = navController){recipientAddress, assetType, amount ->
-                    println("Recipient Address: $recipientAddress - Asset Type: $assetType - Transferred Amount: $amount")
-                }
+                TransferScreen(navController = navController)
             }
 
             composable("notificationsScreen"){

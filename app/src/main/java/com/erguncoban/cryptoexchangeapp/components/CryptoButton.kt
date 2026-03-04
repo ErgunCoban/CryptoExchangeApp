@@ -8,6 +8,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -18,11 +19,15 @@ import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoYellow
 fun CryptoButton(
     text: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
 ) {
     Button(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(containerColor = CryptoYellow),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = CryptoYellow,
+            disabledContainerColor = Color.DarkGray,
+            disabledContentColor = Color.LightGray),
         shape = RoundedCornerShape(12.dp),
         modifier = modifier
             .fillMaxWidth()
@@ -30,7 +35,7 @@ fun CryptoButton(
     ) {
         Text(
             text = text,
-            color = CryptoBlackBackground,
+            color = if (enabled) CryptoBlackBackground else Color.LightGray,
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp
         )
