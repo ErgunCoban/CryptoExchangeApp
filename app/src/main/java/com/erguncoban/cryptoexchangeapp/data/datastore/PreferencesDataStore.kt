@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-// PreferencesManager.kt
 private val Context.dataStore by preferencesDataStore(name = "user_preferences")
 
 class PreferencesManager @Inject constructor(

@@ -36,10 +36,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.erguncoban.cryptoexchangeapp.R
 import com.erguncoban.cryptoexchangeapp.components.AssetRowItem
 import com.erguncoban.cryptoexchangeapp.components.PortfolioAssetCard
-import com.erguncoban.cryptoexchangeapp.components.QuickActionButton
+import com.erguncoban.cryptoexchangeapp.components.QuickActionSectionAsset
 import com.erguncoban.cryptoexchangeapp.components.TopBarAsset
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoGray
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoWhite
@@ -83,46 +82,7 @@ fun AssetsScreen(navController: NavController, assetsViewModel: AssetsViewModel 
             }
 
             item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    QuickActionButton(
-                        icon = R.drawable.deposit_icon,
-                        label = "Deposit",
-                        onClick = {
-                            navController.navigate("depositScreen")
-                        }
-                    )
-
-                    QuickActionButton(
-                        icon = R.drawable.withdraw_icon,
-                        label = "Withdraw",
-                        onClick = {
-                            navController.navigate("withdrawScreen")
-                        }
-                    )
-
-                    QuickActionButton(
-                        icon = R.drawable.transfer_icon,
-                        label = "Transfer",
-                        onClick = {
-                            navController.navigate("transferScreen")
-                        }
-                    )
-
-                    QuickActionButton(
-                        icon = R.drawable.activity_history,
-                        label = "History",
-                        onClick = {
-                            showHistorySheet = true
-                        }
-                    )
-
-                }
-                Spacer(modifier = Modifier.size(16.dp))
+                QuickActionSectionAsset(navController, onHistoryClick = {showHistorySheet = true})
             }
 
             item {
