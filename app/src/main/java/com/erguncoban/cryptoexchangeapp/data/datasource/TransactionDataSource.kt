@@ -7,6 +7,7 @@ import com.google.firebase.firestore.Query
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class TransactionDataSource @Inject constructor(private val auth: FirebaseAuth,
@@ -38,6 +39,34 @@ class TransactionDataSource @Inject constructor(private val auth: FirebaseAuth,
         }
         awaitClose { subscription.remove() }
 
+    }
+
+    suspend fun getTrasnactionById(tradeId: String) : Result<TradeHistory>{
+        val userId = auth.currentUser?.uid
+        if (userId == null){
+            return Result.failure(Exception("User not logged in"))
+        }
+
+        return try {
+
+            val docRef = firestore.collection("users").document(userId).collection("trades").document(tradeId)
+
+            val snapshot = docRef.get().await()
+
+            if (snapshot.exists()){
+                val trade = snapshot.toObject(TradeHistory::class.java)
+                if (trade != null){
+                    Result.success(trade)
+                }else{
+                    Result.failure(Exception("Parsing error"))
+                }
+            }else{
+                Result.failure(Exception("No such transaction found"))
+            }
+
+        }catch (e: Exception){
+            Result.failure(e)
+        }
     }
 
 }

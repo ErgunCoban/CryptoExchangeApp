@@ -30,6 +30,7 @@ import com.erguncoban.cryptoexchangeapp.uix.view.LoginScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.MarketsScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.NotificationsScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.SignupScreen
+import com.erguncoban.cryptoexchangeapp.uix.view.SpotTradeHistoryDetailScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.SpotTradeHistoryScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.TradeScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.TransferScreen
@@ -192,6 +193,13 @@ fun BottomBar(startDestination: String){
 
             composable("spotTradeHistoryScreen"){
                 SpotTradeHistoryScreen(navController = navController)
+            }
+
+            composable(
+                "spotTradeHistoryDetailScreen/{tradeId}",
+                arguments = listOf(navArgument("tradeId"){type = NavType.StringType})){ backStackEntry ->
+                val tradeId = backStackEntry.arguments?.getString("tradeId") ?: ""
+                SpotTradeHistoryDetailScreen(navController = navController, tradeId = tradeId)
             }
 
         }

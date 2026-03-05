@@ -11,4 +11,8 @@ class TransactionRepository @Inject constructor(private val dataSource: Transact
         return dataSource.getTransactions()
     }
 
+    suspend fun getTransactionById(tradeId: String) : Result<TradeHistory> {
+        return dataSource.getTrasnactionById(tradeId)
+    }
+
 }

@@ -65,7 +65,7 @@ fun SpotTradeHistoryScreen(navController: NavController, viewModel: SpotTradeHis
                     TradeHistorySummaryItem(
                         item = tradeItem,
                         onClick = { tradeId ->
-                            navController.navigate("tradeDetailScreen")
+                            navController.navigate("spotTradeHistoryDetailScreen/$tradeId")
                         }
                     )
                 }
