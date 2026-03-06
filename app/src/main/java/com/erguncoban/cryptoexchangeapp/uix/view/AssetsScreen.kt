@@ -128,13 +128,13 @@ fun AssetsScreen(navController: NavController, assetsViewModel: AssetsViewModel 
                 )
                 HorizontalDivider(color = Color.DarkGray, thickness = 1.dp)
 
-                HistoryOptionRow("Assets", "Deposit, Withdraw, Transfer",
+                HistoryOptionRow("Wallet", "Deposit, Withdraw, Transfer",
                     onClick = {showHistorySheet = false
-                        navController.navigate("AssetTransactionsScreen")})
+                        navController.navigate("walletTransactionsScreen")})
 
                 HistoryOptionRow("My Trades", "Spot Buy & Sell",
                     onClick = {showHistorySheet = false
-                        navController.navigate("SpotTradeHistoryScreen")})
+                        navController.navigate("spotTradeHistoryScreen")})
 
             }
         }

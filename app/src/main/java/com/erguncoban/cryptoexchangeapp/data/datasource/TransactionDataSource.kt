@@ -41,7 +41,7 @@ class TransactionDataSource @Inject constructor(private val auth: FirebaseAuth,
 
     }
 
-    suspend fun getTrasnactionById(tradeId: String) : Result<TradeHistory>{
+    suspend fun getTransactionById(tradeId: String) : Result<TradeHistory>{
         val userId = auth.currentUser?.uid
         if (userId == null){
             return Result.failure(Exception("User not logged in"))

@@ -12,7 +12,7 @@ class TransactionRepository @Inject constructor(private val dataSource: Transact
     }
 
     suspend fun getTransactionById(tradeId: String) : Result<TradeHistory> {
-        return dataSource.getTrasnactionById(tradeId)
+        return dataSource.getTransactionById(tradeId)
     }
 
 }

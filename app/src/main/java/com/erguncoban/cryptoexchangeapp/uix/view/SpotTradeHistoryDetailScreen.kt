@@ -88,7 +88,8 @@ fun SpotTradeHistoryDetailScreen(navController: NavController, tradeId: String, 
                 ) {
                     Text("Veri Başarıyla Çekildi!",
                         color = MarketGreen,
-                        fontSize = 20.sp)
+                        fontSize = 20.sp
+                    )
                     Divider(color = CryptoGray)
 
                     Text("ID: ${trade.documentId}", color = Color.White)

@@ -21,7 +21,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.erguncoban.cryptoexchangeapp.R
 import com.erguncoban.cryptoexchangeapp.ui.theme.TextGray
-import com.erguncoban.cryptoexchangeapp.uix.view.AssetTransactionsScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.AssetsScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.CoinDetailsScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.DepositScreen
@@ -35,6 +34,8 @@ import com.erguncoban.cryptoexchangeapp.uix.view.SpotTradeHistoryScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.TradeScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.TransferScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.UserProfileScreen
+import com.erguncoban.cryptoexchangeapp.uix.view.WalletTransactionDetailScreen
+import com.erguncoban.cryptoexchangeapp.uix.view.WalletTransactionsScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.WelcomeScreen
 import com.erguncoban.cryptoexchangeapp.uix.view.WithdrawScreen
 
@@ -187,8 +188,8 @@ fun BottomBar(startDestination: String){
                 NotificationsScreen(navController = navController)
             }
 
-            composable("assetTransactionsScreen"){
-                AssetTransactionsScreen(navController = navController)
+            composable("walletTransactionsScreen"){
+                WalletTransactionsScreen(navController = navController)
             }
 
             composable("spotTradeHistoryScreen"){
@@ -200,6 +201,13 @@ fun BottomBar(startDestination: String){
                 arguments = listOf(navArgument("tradeId"){type = NavType.StringType})){ backStackEntry ->
                 val tradeId = backStackEntry.arguments?.getString("tradeId") ?: ""
                 SpotTradeHistoryDetailScreen(navController = navController, tradeId = tradeId)
+            }
+
+            composable(
+                "walletTransactionDetailScreen/{tradeId}",
+                arguments = listOf(navArgument("tradeId"){type = NavType.StringType})){ backStackEntry ->
+                val tradeId = backStackEntry.arguments?.getString("tradeId") ?: ""
+                WalletTransactionDetailScreen(navController = navController, tradeId = tradeId)
             }
 
         }
