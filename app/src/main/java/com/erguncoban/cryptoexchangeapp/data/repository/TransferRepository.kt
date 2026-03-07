@@ -5,6 +5,10 @@ import javax.inject.Inject
 
 class TransferRepository @Inject constructor(private val transferDataSource: TransferDataSource) {
 
+    suspend fun checkUserExists(userId: String) : Boolean{
+        return transferDataSource.checkUserExists(userId)
+    }
+
     suspend fun sendCoinToUser(receiverId: String, coinId: String, amount: Double): Result<Unit>{
         return transferDataSource.executeTransfer(
             receiverId = receiverId,

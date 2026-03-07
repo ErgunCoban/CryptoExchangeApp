@@ -223,8 +223,7 @@ class PortfolioRemoteDataSource @Inject constructor(private val firestore: Fireb
 
             val items = snapshot?.documents?.mapNotNull { doc ->
                 val amount = doc.getDouble("amount") ?: 0.0
-                val totalInvested = doc.getDouble("totalInvested") ?: 0.0
-                PortfolioItem(doc.id, amount, totalInvested)
+                PortfolioItem(doc.id, amount)
             } ?: emptyList()
 
             trySend(items)

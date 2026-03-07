@@ -8,7 +8,4 @@ data class TradeSummaryUIModel(
     val amountText: String,
     val entryPriceText: String,
     val dateText: String,
-
-    val pnlText: String? = null,
-    val isProfit: Boolean? = null
 )

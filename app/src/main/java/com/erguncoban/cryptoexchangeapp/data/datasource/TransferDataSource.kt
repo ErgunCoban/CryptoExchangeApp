@@ -9,6 +9,17 @@ import javax.inject.Inject
 class TransferDataSource @Inject constructor(private val auth: FirebaseAuth,
                                              private val firestore: FirebaseFirestore){
 
+    suspend fun checkUserExists(userId: String) : Boolean{
+        return try {
+            val documentSnapshot = firestore.collection("users").document(userId).get().await()
+
+            documentSnapshot.exists()
+        }catch (e: Exception){
+            false
+        }
+
+    }
+
     suspend fun executeTransfer(
         receiverId: String,
         coinId: String,

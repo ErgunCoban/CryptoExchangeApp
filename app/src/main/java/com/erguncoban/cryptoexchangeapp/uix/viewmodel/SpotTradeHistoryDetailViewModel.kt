@@ -10,6 +10,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,6 +20,10 @@ class SpotTradeHistoryDetailViewModel @Inject constructor(private val repository
 
     private val _uiState = MutableStateFlow(TradeDetailUIState())
     val uiState: StateFlow<TradeDetailUIState> = _uiState.asStateFlow()
+
+    companion object {
+        private val sdf = SimpleDateFormat("dd MMM yyyy HH:mm", Locale.ENGLISH)
+    }
 
     fun getTradeDetail(tradeId: String){
         if (_uiState.value.trade?.documentId == tradeId) return
@@ -27,10 +34,15 @@ class SpotTradeHistoryDetailViewModel @Inject constructor(private val repository
             val result = repository.getTransactionById(tradeId)
 
             result.onSuccess { tradeData ->
+
+                val dateObj = Date(tradeData.timestamp)
+                val dateString = sdf.format(dateObj)
+
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        trade = tradeData
+                        trade = tradeData,
+                        formattedDate = dateString
                     )
                 }
             }.onFailure { exception ->

@@ -21,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.erguncoban.cryptoexchangeapp.data.entity.TradeSummaryUIModel
-import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoGray
 import com.erguncoban.cryptoexchangeapp.ui.theme.MarketGreen
 import com.erguncoban.cryptoexchangeapp.ui.theme.MarketRed
 
@@ -32,12 +31,6 @@ fun TradeHistorySummaryItem(
 ) {
 
     val typeColor = if (item.isBuy) MarketGreen else MarketRed
-
-    val pnlColor = when (item.isProfit) {
-        true -> MarketGreen
-        false -> MarketRed
-        null -> CryptoGray
-    }
 
     Card(
         modifier = Modifier
@@ -90,16 +83,6 @@ fun TradeHistorySummaryItem(
                     color = Color.Gray,
                     fontSize = 12.sp
                 )
-
-                if (item.pnlText != null) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = item.pnlText,
-                        color = pnlColor,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp
-                    )
-                }
             }
         }
     }

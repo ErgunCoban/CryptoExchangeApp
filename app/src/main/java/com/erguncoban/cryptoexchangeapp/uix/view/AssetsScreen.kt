@@ -86,6 +86,7 @@ fun AssetsScreen(navController: NavController, assetsViewModel: AssetsViewModel 
             }
 
             item {
+                Spacer(modifier = Modifier.height(8.dp))
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

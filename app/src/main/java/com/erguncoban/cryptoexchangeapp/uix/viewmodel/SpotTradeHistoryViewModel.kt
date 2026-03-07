@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
@@ -20,7 +21,7 @@ class SpotTradeHistoryViewModel @Inject constructor(private val repository: Tran
     val tradeList = _tradeList.asStateFlow()
 
     companion object {
-        private val sdf = java.text.SimpleDateFormat("dd MMM yyyy HH:mm", Locale.ENGLISH)
+        private val sdf = SimpleDateFormat("dd MMM yyyy HH:mm", Locale.ENGLISH)
     }
 
     init {
@@ -41,9 +42,7 @@ class SpotTradeHistoryViewModel @Inject constructor(private val repository: Tran
                             isBuy = trade.type == "BUY",
                             amountText = "${trade.amount} ${trade.coinId.uppercase()}",
                             entryPriceText = "$${trade.price}",
-                            dateText = sdf.format(Date(trade.timestamp)),
-                            pnlText = null,
-                            isProfit = null
+                            dateText = sdf.format(Date(trade.timestamp))
                         )
                     }
                 }

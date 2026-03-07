@@ -126,37 +126,6 @@ fun CoinInfoSection(detail: CryptoDetailResponse){
             }
         }
 
-        item {
-            Column{
-                Row(
-                    modifier = Modifier
-                        .padding(vertical = 8.dp)
-                ) {
-                    Text(
-                        text = "Links",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = CryptoWhite
-                    )
-                }
-
-                Row(
-                    modifier = Modifier
-                        .padding(vertical = 8.dp)
-                ) {
-                    Text(
-                        text = "Website",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = CryptoGray
-                    )
-
-
-                }
-
-            }
-        }
-
     }
 
 }

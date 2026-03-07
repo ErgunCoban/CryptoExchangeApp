@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,15 +32,33 @@ import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoBlackBackground
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoWhite
 import com.erguncoban.cryptoexchangeapp.ui.theme.MarketRed
 import com.erguncoban.cryptoexchangeapp.uix.viewmodel.TransferViewModel
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransferScreen(navController: NavController, viewModel: TransferViewModel = hiltViewModel()) {
 
+    val symbols = DecimalFormatSymbols(Locale("tr", "TR"))
+    val usdFormatter = DecimalFormat("#,##0.00", symbols)
+    val coinFormatter = DecimalFormat("#,##0.#####", symbols)
+
     var recipientAddress by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
-    var assetType by remember { mutableStateOf("USDT") }
 
     val state by viewModel.uiState.collectAsState()
+
+    val portfolioItems by viewModel.portfolioItems.collectAsState()
+
+    var expanded by remember { mutableStateOf(false) }
+    var selectedAsset by remember { mutableStateOf("Tether") }
+
+    LaunchedEffect(portfolioItems) {
+        if (portfolioItems.isNotEmpty() && !portfolioItems.any{ it.coinId.equals(selectedAsset, true) }){
+            selectedAsset = portfolioItems.first().coinId.uppercase()
+        }
+    }
 
     LaunchedEffect(state.isSuccess) {
         if (state.isSuccess){
@@ -60,11 +81,56 @@ fun TransferScreen(navController: NavController, viewModel: TransferViewModel = 
 
             Text("Send to", color = CryptoWhite, fontWeight = FontWeight.Bold, fontSize = 18.sp)
 
-            CryptoTextField(
-                value = assetType,
-                onValueChange = { assetType = it },
-                label = "Asset (e.g., BTC, USDT, ETH)"
-            )
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = {
+                    expanded = !expanded
+                }
+            ) {
+                CryptoTextField(
+                    value = selectedAsset,
+                    onValueChange = {},
+                    label = "Asset",
+                    modifier = Modifier.menuAnchor()
+                )
+
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = {
+                        expanded = false
+                    }
+                ) {
+                    if (portfolioItems.isEmpty()){
+                        DropdownMenuItem(
+                            text = {
+                                Text("No assets in portfolio")
+                            },
+                            onClick = {
+                                expanded = false
+                            }
+                        )
+                    }else{
+                        portfolioItems.forEach { item ->
+
+                            val formattedBalance = if (item.coinId == "tether"){
+                                usdFormatter.format(item.amount)
+                            }else{
+                                coinFormatter.format(item.amount)
+                            }
+
+                            DropdownMenuItem(
+                                text = {
+                                    Text("${item.coinId.uppercase()} - Balance: $formattedBalance")
+                                },
+                                onClick = {
+                                    selectedAsset = item.coinId.uppercase()
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+            }
 
             CryptoTextField(
                 value = recipientAddress,
@@ -97,7 +163,7 @@ fun TransferScreen(navController: NavController, viewModel: TransferViewModel = 
                     if (amount.isNotEmpty() && recipientAddress.isNotEmpty() && !state.isLoading) {
                         viewModel.transferCoin(
                             receiverId = recipientAddress,
-                            coinId = assetType,
+                            coinId = selectedAsset,
                             amountStr = amount
                         )
                     }
