@@ -16,12 +16,9 @@ data class CryptoDetailResponse(@SerializedName("id")
                                 val marketCapRank: Int,
                                 @SerializedName("description")
                                 val description: Map<String, String>?,
-                                @SerializedName("links")
-                                val links: CoinLinks?,
                                 @SerializedName("market_data")
                                 val marketData: DetailMarketData?) {
 
     fun getLargeImageUrl(): String = image?.large ?: ""
 
-    fun getDescriptionEn(): String = description?.get("en") ?: ""
 }

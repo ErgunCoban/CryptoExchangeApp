@@ -4,14 +4,19 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.erguncoban.cryptoexchangeapp.data.entity.CryptoCoin
+import com.erguncoban.cryptoexchangeapp.data.entity.PortfolioSummary
 import com.erguncoban.cryptoexchangeapp.data.repository.CoinRepository
 import com.erguncoban.cryptoexchangeapp.data.repository.FirebaseAuthRepository
 import com.erguncoban.cryptoexchangeapp.data.repository.PortfolioRepository
 import com.erguncoban.cryptoexchangeapp.data.repository.UserRepository
+import com.erguncoban.cryptoexchangeapp.usecase.GetPortfolioSummaryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,7 +24,8 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(private val repository: CoinRepository,
                                         private val authRepository: FirebaseAuthRepository,
                                         private val userRepository: UserRepository,
-                                        private val portfolioRepository: PortfolioRepository) : ViewModel() {
+                                        private val portfolioRepository: PortfolioRepository,
+                                        private val getPortfolioSummaryUseCase: GetPortfolioSummaryUseCase, ) : ViewModel() {
 
     private val _coinList = MutableStateFlow<List<CryptoCoin>>(emptyList())
     val coinList = _coinList.asStateFlow()
@@ -29,6 +35,13 @@ class HomeViewModel @Inject constructor(private val repository: CoinRepository,
 
     private val _totalPortfolioValue = MutableStateFlow(0.0)
     val totalPortfolioValue = _totalPortfolioValue.asStateFlow()
+
+    val portfolioSummary: StateFlow<PortfolioSummary> = getPortfolioSummaryUseCase()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = PortfolioSummary()
+        )
 
     init {
         loadCoins()

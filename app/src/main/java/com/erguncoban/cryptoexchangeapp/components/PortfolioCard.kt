@@ -25,22 +25,33 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.erguncoban.cryptoexchangeapp.R
+import com.erguncoban.cryptoexchangeapp.data.entity.PortfolioSummary
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoDarkCard
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoWhite
 import com.erguncoban.cryptoexchangeapp.ui.theme.MarketGreen
+import com.erguncoban.cryptoexchangeapp.ui.theme.MarketRed
 import com.erguncoban.cryptoexchangeapp.ui.theme.TextGray
 import com.erguncoban.cryptoexchangeapp.ui.theme.YellowTheme
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.Locale
+import kotlin.math.abs
 
 @Composable
-fun PortfolioCard(balance: Double){
+fun PortfolioCard(summary: PortfolioSummary){
 
     val isVisible = remember { mutableStateOf(true) }
 
     val symbols = DecimalFormatSymbols(Locale("tr", "TR"))
     val usdFormatter = DecimalFormat("#,##0.00", symbols)
+
+    val isPositive = summary.absoluteChange24h >= 0
+
+    val trendColor = if (isPositive) MarketGreen else MarketRed
+    val sign = if (isPositive) "+" else "-"
+
+    val absChange = abs(summary.absoluteChange24h)
+    val absPercent = abs(summary.percentageChange24h)
 
     Card(
         modifier = Modifier
@@ -72,9 +83,9 @@ fun PortfolioCard(balance: Double){
 
                 Text(
                     text = if (isVisible.value){
-                        " ${usdFormatter.format(balance)}"
+                        "$${usdFormatter.format(summary.totalBalanceUsd)}"
                     }else{
-                        " $*******"
+                        "$*******"
                     },
                     fontSize = 36.sp,
                     fontWeight = FontWeight.ExtraBold,
@@ -103,15 +114,19 @@ fun PortfolioCard(balance: Double){
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.up_arrow_green),
+                    painter = if (isPositive){
+                        painterResource(R.drawable.up_arrow_green)
+                    }else{
+                        painterResource(R.drawable.down_arrow_red)
+                    },
                     contentDescription = "profit day",
                     tint = Color.Unspecified,   //iconun kendi renginde görünmesi için
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "+$250.10 (2.15%) ",
-                    color = MarketGreen,
+                    text = "$sign$${usdFormatter.format(absChange)} (${usdFormatter.format(absPercent)}%) ",
+                    color = trendColor,
                     fontWeight = FontWeight.Medium
                 )
 

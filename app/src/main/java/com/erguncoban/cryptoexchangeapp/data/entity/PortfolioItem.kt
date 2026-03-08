@@ -1,6 +1,6 @@
 package com.erguncoban.cryptoexchangeapp.data.entity
 
-class PortfolioItem(
+data class PortfolioItem(
     val coinId: String,
     val amount: Double){
 }
