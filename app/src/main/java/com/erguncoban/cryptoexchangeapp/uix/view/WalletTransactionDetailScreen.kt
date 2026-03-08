@@ -51,7 +51,7 @@ fun WalletTransactionDetailScreen(navController: NavController, tradeId: String,
     Scaffold(
         containerColor = CryptoBlackBackground,
         topBar = {
-            TopBarTradeHistory(navController = navController, title = "Asset Details")
+            TopBarTradeHistory(navController = navController, title = "Asset Details", CryptoWhite)
         }
     ) { paddingValues ->
 

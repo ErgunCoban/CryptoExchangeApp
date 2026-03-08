@@ -51,7 +51,7 @@ fun SpotTradeHistoryDetailScreen(navController: NavController, tradeId: String, 
     Scaffold(
         containerColor = CryptoBlackBackground,
         topBar = {
-            TopBarTradeHistory(navController, "Trade Details")
+            TopBarTradeHistory(navController, "Trade Details", CryptoWhite)
         }
     ) { paddingValues ->
 

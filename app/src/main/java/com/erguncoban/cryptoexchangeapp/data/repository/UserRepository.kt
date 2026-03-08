@@ -1,6 +1,7 @@
 package com.erguncoban.cryptoexchangeapp.data.repository
 
 import com.erguncoban.cryptoexchangeapp.data.datasource.UserRemoteDataSource
+import com.erguncoban.cryptoexchangeapp.data.entity.ProfileUiState
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -24,6 +25,10 @@ class UserRepository @Inject constructor(private val dataSource: UserRemoteDataS
 
     fun getFavoriteCoins(uid: String) : Flow<List<String>> {
         return dataSource.getFavoriteCoins(uid)
+    }
+
+    suspend fun getUserProfile(uid: String): ProfileUiState?{
+        return dataSource.getUserProfile(uid)
     }
 
 }

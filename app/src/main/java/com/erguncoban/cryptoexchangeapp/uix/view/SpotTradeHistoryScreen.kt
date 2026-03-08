@@ -22,6 +22,7 @@ import androidx.navigation.NavController
 import com.erguncoban.cryptoexchangeapp.components.TopBarTradeHistory
 import com.erguncoban.cryptoexchangeapp.components.TradeHistorySummaryItem
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoGray
+import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoWhite
 import com.erguncoban.cryptoexchangeapp.uix.viewmodel.SpotTradeHistoryViewModel
 
 @Composable
@@ -31,7 +32,7 @@ fun SpotTradeHistoryScreen(navController: NavController, viewModel: SpotTradeHis
 
     Scaffold(
         topBar = {
-            TopBarTradeHistory(navController, "My Trades")
+            TopBarTradeHistory(navController, "My Trades", CryptoWhite)
         }
     ) { paddingValues ->
 

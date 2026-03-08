@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -19,7 +20,7 @@ import com.erguncoban.cryptoexchangeapp.R
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoWhite
 
 @Composable
-fun TopBarTradeHistory(navController: NavController, title: String){
+fun TopBarTradeHistory(navController: NavController, title: String, color: Color){
 
     Box(
         modifier = Modifier
@@ -42,9 +43,9 @@ fun TopBarTradeHistory(navController: NavController, title: String){
 
         Text(
             text = title,
-            fontSize = 24.sp,
+            fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
-            color = CryptoWhite,
+            color = color,
             modifier = Modifier.align(Alignment.Center)
         )
     }

@@ -1,6 +1,7 @@
 package com.erguncoban.cryptoexchangeapp.data.datasource
 
 import android.util.Log
+import com.erguncoban.cryptoexchangeapp.data.entity.ProfileUiState
 import com.erguncoban.cryptoexchangeapp.data.entity.TradeHistory
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
@@ -125,6 +126,17 @@ class UserRemoteDataSource @Inject constructor(private val auth: FirebaseAuth,
             }
         }
         awaitClose { listener.remove() }
+    }
+
+    suspend fun getUserProfile(uid: String) : ProfileUiState?{
+        return try {
+            val snapshot = firestore.collection("users").document(uid).get().await()
+
+            snapshot.toObject(ProfileUiState::class.java)
+        }catch (e: Exception){
+            e.printStackTrace()
+            null
+        }
     }
 
 }

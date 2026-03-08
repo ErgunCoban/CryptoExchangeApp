@@ -53,6 +53,7 @@ fun PortfolioCard(summary: PortfolioSummary){
     val absChange = abs(summary.absoluteChange24h)
     val absPercent = abs(summary.percentageChange24h)
 
+
     Card(
         modifier = Modifier
             .fillMaxWidth(),

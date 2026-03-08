@@ -18,6 +18,7 @@ import androidx.navigation.NavController
 import com.erguncoban.cryptoexchangeapp.components.AssetTransactionItem
 import com.erguncoban.cryptoexchangeapp.components.TopBarTradeHistory
 import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoGray
+import com.erguncoban.cryptoexchangeapp.ui.theme.CryptoWhite
 import com.erguncoban.cryptoexchangeapp.uix.viewmodel.AssetTransactionsViewModel
 
 @Composable
@@ -27,7 +28,7 @@ fun WalletTransactionsScreen(navController: NavController, viewModel: AssetTrans
 
     Scaffold(
         topBar = {
-            TopBarTradeHistory(navController, "Assets")
+            TopBarTradeHistory(navController, "Assets", CryptoWhite)
         }
     ) { paddingValues ->
 
