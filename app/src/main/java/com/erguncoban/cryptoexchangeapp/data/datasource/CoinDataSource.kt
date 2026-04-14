@@ -1,5 +1,6 @@
 package com.erguncoban.cryptoexchangeapp.data.datasource
 
+import com.erguncoban.cryptoexchangeapp.BuildConfig
 import com.erguncoban.cryptoexchangeapp.data.entity.CryptoCoin
 import com.erguncoban.cryptoexchangeapp.data.entity.CryptoDetailResponse
 import com.erguncoban.cryptoexchangeapp.data.entity.MarketChartResponse
@@ -8,7 +9,7 @@ import javax.inject.Inject
 
 class CoinDataSource @Inject constructor(private val api: CoinApiService) {
 
-    private val API_KEY = "CG-S1BPT9jt9GeyE7nRDMpqDh9z"
+    private val API_KEY = BuildConfig.API_KEY
 
     suspend fun getCoins() : List<CryptoCoin> {
         return api.getTopCoins()
