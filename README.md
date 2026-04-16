@@ -23,17 +23,20 @@ This application is developed to track the cryptocurrency market, provide user a
 - Cloud-based data management
 
 ## 🎯 Goal
-This proje ct aims to provide a scalable mobile application structure using clean architecture, maintainable code practices, and modern Android development tools.
+This project aims to provide a scalable mobile application structure using clean architecture, maintainable code practices, and modern Android development tools.
 
 ## 📸 Screenshots
 
 <p align="center">
   <img src="screenshots/login.png" width="200"/>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <img src="screenshots/home.png" width="200"/>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <img src="screenshots/markets.png" width="200"/>
 </p>
 
 <p align="center">
   <img src="screenshots/coin.png" width="200"/>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <img src="screenshots/assets.png" width="200"/>
 </p>
